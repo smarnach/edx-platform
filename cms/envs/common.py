@@ -107,6 +107,13 @@ FEATURES = {
 
     # Modulestore to use for new courses
     'DEFAULT_STORE_FOR_NEW_COURSE': None,
+
+    # Whether or not to enable Creative Commons Licensing ability for courses
+    'CREATIVE_COMMONS_LICENSING': True,
+
+    # The default value for the licenseable field of the course module.
+    # This determines whether a course is licenseable or not by default, and will do nothing unless CREATIVE_COMMONS_LICENSING is True
+    'DEFAULT_COURSE_LICENSEABLE': False, 
 }
 ENABLE_JASMINE = False
 

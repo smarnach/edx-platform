@@ -6,13 +6,14 @@
 <%namespace name='static' file='static_content.html'/>
 <%!
   from django.utils.translation import ugettext as _
+  from django.conf import settings
   from contentstore import utils
   from contentstore.views.course import should_show_group_configurations_page
   import urllib
 %>
 
 <%block name="header_extras">
-% for template_name in ["basic-modal", "modal-button", "upload-dialog"]:
+% for template_name in ["basic-modal", "modal-button", "upload-dialog", "license-selector"]:
   <script type="text/template" id="${template_name}-tpl">
     <%static:include path="js/${template_name}.underscore" />
   </script>
@@ -291,6 +292,24 @@ CMS.URL.UPLOAD_ASSET = '${upload_asset_url}';
               </ol>
             </section>
           % endif
+          % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and context_course.licenseable:
+            <hr class="divide" />
+            <section class="group-settings license">
+              <header>
+                <h2 class="title-2">${_("Course License")}</h2>
+                <span class="tip">${_("Selected license for this course")}</span>
+              </header>
+
+              <ol class="list-input">
+                <li class="field text" id="field-course-license">
+                  <div id="course-license-form"></div>
+                  <span class="tip tip-inline">${_("Selected license for this course")}</span>
+                </li>
+              </ol>
+            </section>
+          % endif
+
+
       </form>
     </article>
     <aside class="content-supplementary" role="complementary">
