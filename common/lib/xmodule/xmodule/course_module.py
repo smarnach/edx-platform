@@ -11,7 +11,7 @@ from lazy import lazy
 from xmodule.seq_module import SequenceDescriptor, SequenceModule
 from xmodule.graders import grader_from_conf
 from xmodule.tabs import CourseTabList
-from xmodule.license import parse_license
+from xmodule.license import parse_license, License
 import json
 
 from xblock.fields import Scope, List, String, Dict, Boolean, Integer
@@ -622,7 +622,7 @@ class CourseFields(object):
                               help="Whether to restrict enrollment to invitation by the course staff.",
                               default=False,
                               scope=Scope.settings)
-    license = String(help="License for this course", scope=Scope.settings)
+    license = License(help="License for this course", scope=Scope.settings)
 
     licenseable = Boolean(display_name=_("Licenseable"),
                               help="Wheter this course and it's contents can be licensed using Creative Commons Licensing.",

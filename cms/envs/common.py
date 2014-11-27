@@ -113,7 +113,7 @@ FEATURES = {
 
     # The default value for the licenseable field of the course module.
     # This determines whether a course is licenseable or not by default, and will do nothing unless CREATIVE_COMMONS_LICENSING is True
-    'DEFAULT_COURSE_LICENSEABLE': False, 
+    'DEFAULT_COURSE_LICENSEABLE': True, 
 }
 ENABLE_JASMINE = False
 

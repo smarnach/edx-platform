@@ -2,6 +2,7 @@ import re
 import logging
 import datetime
 import json
+import pudb
 from json.encoder import JSONEncoder
 
 from opaque_keys.edx.locations import Location
@@ -9,7 +10,7 @@ from xmodule.modulestore.exceptions import ItemNotFoundError
 from contentstore.utils import course_image_url
 from models.settings import course_grading
 from xmodule.fields import Date
-from xmodule.license import *
+from xmodule.license import parse_license, License
 from xmodule.modulestore.django import modulestore
 
 # This list represents the attribute keys for a course's 'about' info.
@@ -211,7 +212,7 @@ class CourseDetails(object):
 # TODO move to a more general util?
 class CourseSettingsEncoder(json.JSONEncoder):
     """
-    Serialize CourseDetails, CourseGradingModel, datetime, and old Locations
+    Serialize CourseDetails, CourseGradingModel, datetime, licenses, and old Locations
     """
     def default(self, obj):
         if isinstance(obj, (CourseDetails, course_grading.CourseGradingModel)):
@@ -221,6 +222,6 @@ class CourseSettingsEncoder(json.JSONEncoder):
         elif isinstance(obj, datetime.datetime):
             return Date().to_json(obj)
         elif isinstance(obj, License):
-            return obj.to_json()
+            return obj.to_json(obj)
         else:
             return JSONEncoder.default(self, obj)

@@ -23,6 +23,8 @@ class License(JSONField):
     Base License class
     """
 
+    _default = None
+
     def __init__(self, license=None, version=None, *args, **kwargs):
         self.license = license
         self.version = version
@@ -36,20 +38,20 @@ class License(JSONField):
 
         return ""
 
-    def __str__(self):
-        """
-        Return a string representation of the license
-        """
-        return self.license
+    # def __str__(self):
+    #     """
+    #     Return a string representation of the license
+    #     """
+    #     return self.license
 
-    def __get__(self, instance, owner):
-        return instance
+    # def __get__(self, instance, owner):
+    #     return instance
 
-    def __set__(self, instance, value):
-        """
-        Define a setter so the `license` property can be modified by setting the instance to a valid license String
-        """
-        instance.license = value
+    # def __set__(self, instance, value):
+    #     """
+    #     Define a setter so the `license` property can be modified by setting the instance to a valid license String
+    #     """
+    #     instance.license = value
 
     def img(self, big=False):
         """
@@ -102,7 +104,7 @@ class License(JSONField):
         if value is None:
             return None
         elif isinstance(value, License):
-            return {"license": self.license, "version": self.version}
+            return {"license": value.license, "version": value.version}
         else:
             raise TypeError("Cannot convert {!r} to json".format(value))
 
