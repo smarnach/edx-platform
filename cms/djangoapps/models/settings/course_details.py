@@ -9,7 +9,7 @@ from xmodule.modulestore.exceptions import ItemNotFoundError
 from contentstore.utils import course_image_url
 from models.settings import course_grading
 from xmodule.fields import Date
-from xmodule.license import License
+from xmodule.license import *
 from xmodule.modulestore.django import modulestore
 
 # This list represents the attribute keys for a course's 'about' info.
@@ -120,7 +120,7 @@ class CourseDetails(object):
         date = Date()
 
         if 'license' in jsondict:
-            descriptor.license = license.from_json(jsondict['license'])
+            descriptor.license = parse_license(jsondict['license'])
             dirty = True
 
         if 'start_date' in jsondict:
@@ -221,6 +221,6 @@ class CourseSettingsEncoder(json.JSONEncoder):
         elif isinstance(obj, datetime.datetime):
             return Date().to_json(obj)
         elif isinstance(obj, License):
-            return License().to_json(obj)
+            return obj.to_json()
         else:
             return JSONEncoder.default(self, obj)

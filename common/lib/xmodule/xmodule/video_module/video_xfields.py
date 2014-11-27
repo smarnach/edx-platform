@@ -25,7 +25,7 @@ class VideoFields(object):
         help=_("The type of license for this module."),
         display_name=_("License"),
         scope=Scope.settings,
-        default={}
+        default=None
     )
 
     saved_video_position = RelativeTime(

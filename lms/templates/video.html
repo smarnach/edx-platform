@@ -18,8 +18,8 @@
     data-sources='${sources}'
     data-save-state-url="${ajax_url}"
     data-caption-data-dir="${data_dir}"
-    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and licenseable:
-      data-license="${license}"
+    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and licenseable is not UNDEFINED and license is not UNDEFINED and licenseable:
+        data-license="${license}"
     % endif
     data-show-captions="${show_captions}"
     data-general-speed="${general_speed}"
@@ -98,7 +98,7 @@
           <a class="nav-skip sr" id="before-transcript_${id}" href="#after-transcript_${id}">${_('Skip to end of transcript.')}</a>
       </article>
 
-      % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and licenseable:
+      % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and licenseable is not UNDEFINED and license is not UNDEFINED and licenseable:
         <div class="license">
           ${license}
         </div>

@@ -482,8 +482,10 @@ def _create_item(request):
         if display_name is not None:
             metadata['display_name'] = display_name
 
-        # Check if licensinng is enabled and the if the course that contains the item is licenseable
-        if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False) and course.licenseable:
+        # Check if licensing is enabled and the if the course that contains the item is licenseable
+        course = store.get_course(dest_usage_key.course_key)
+        metadata['license'] = None
+        if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False) and course is not None and course.licenseable:
             # If we were supplied a license for the item, set it
             license = request.json.get('license')
             if license is not None:

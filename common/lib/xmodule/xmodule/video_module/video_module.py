@@ -231,9 +231,19 @@ class VideoModule(VideoFields, VideoTranscriptsMixin, VideoStudentViewHandlers, 
 
         track_url, transcript_language, sorted_languages = self.get_transcripts_for_student()
 
+        course = None
+        course_id = module_attr('course_id')
+        if course_id is not None and hasattr(self.runtime, 'modulestore'):
+            course = self.runtime.modulestore.get_course(course_id)
 
+        licenseable = False
+        license = None
+        if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False):
+            licenseable = course.licenseable if course is not None else True
+            if licenseable:
+                license = self.license
 
-        context = {
+        return self.system.render_template('video.html', {
             'ajax_url': self.system.ajax_url + '/save_user_state',
             'autoplay': settings.FEATURES.get('AUTOPLAY_VIDEOS', False),
             # This won't work when we move to data that
@@ -264,28 +274,9 @@ class VideoModule(VideoFields, VideoTranscriptsMixin, VideoStudentViewHandlers, 
             'transcript_languages': json.dumps(sorted_languages),
             'transcript_translation_url': self.runtime.handler_url(self, 'transcript', 'translation').rstrip('/?'),
             'transcript_available_translations_url': self.runtime.handler_url(self, 'transcript', 'available_translations').rstrip('/?'),
-        }
-
-        # TODO: Unsure if this is the proper way to do this. Pleasy verify and update if necessary
-        course_id = module_attr('course_id')
-        if course_id is not None and hasattr(self.runtime, 'modulestore'):
-            course = self.runtime.modulestore.get_course(course_id)
-            if hasattr(settings, 'FEATURES') and settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False):
-                context['licenseable'] = course.licenseable
-                context['license'] = json.dumps(self.license)
-                # if not(self.license):
-                #     self.license = course.license
-                #     self.license_version = course.license_version
-
-                # context['license'] = json.dumps(parse_license(
-                #     self.license,
-                #     self.license_version
-                # ))
-
-#                context['license'] = self.license
-#                context['license_version'] = self.license_version
-
-        return self.system.render_template('video.html', context)
+            'licenseable': licenseable,
+            'license': license,
+        })
 
 
 class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandlers, TabsEditingDescriptor, EmptyDataRawDescriptor):

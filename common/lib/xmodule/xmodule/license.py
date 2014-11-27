@@ -16,22 +16,17 @@ from django.utils.translation import ugettext as _
 
 from django.conf import settings
 
-from xblock.fields import Dict
+from xblock.fields import JSONField
 
-class License(Dict):
+class License(JSONField):
     """
     Base License class
     """
 
-    def __init__(self,  *args, **kwargs):
-        """
-        Construct a new license object
-        """
-        # self.license = license
-        # self.version = version
-
-        # self.text = ""
-        super(Dict, self).__init__(*args, **kwargs)
+    def __init__(self, license=None, version=None, *args, **kwargs):
+        self.license = license
+        self.version = version
+        super(JSONField, self).__init__(*args, **kwargs)
 
     @property
     def img_url(self):
@@ -100,24 +95,50 @@ class License(Dict):
 
         return u"<p>" + _("This resource is not licensed.") + u"</p>"
 
-    @staticmethod
-    def to_json( json ):
+    def to_json(self, value):
         """
         Return a JSON representation of the license
         """
-        return {"license": json.license, "license_version": json.version}
+        if value is None:
+            return None
+        elif isinstance(value, License):
+            return {"license": self.license, "version": self.version}
+        else:
+            raise TypeError("Cannot convert {!r} to json".format(value))
 
-    def from_json(self, license_dict):
+
+    def from_json(self, field):
         """
         Construct a new license object from a valid JSON representation
         """
-        return parse_license(license_dict.get('license'), license_dict.get('version'))
+        if field is None:
+            return field
+        elif not field or field is "":
+            return None
+        elif isinstance(field, basestring):
+            if license == "ARR":
+                return ARRLicense(field)
+            elif license[0:5] == "CC-BY" or license == "CC0":
+                return CCLicense(field)
+            else:
+                raise ValueError('Invalid license.')
+        elif isinstance(field, dict):
+            return parse_license(field['license'], field['version'])
+        elif isinstance(field, License):
+            return field
+        else:
+            raise ValueError('Invalid license.')
+
+    enforce_type = from_json
 
 
 class ARRLicense(License):
     """
     License class for an 'All rights reserved' license
     """
+
+    def __init__(self, license, version=None, *args, **kwargs):
+        super(ARRLicense, self).__init__(license, version, *args, **kwargs)
 
     @property
     def img_url(self):
@@ -146,9 +167,8 @@ class CCLicense(License):
     License class for a Creative Commons license
     """
 
-    def __init__(self, *args, **kwargs):
-        super(CCLicense, self).__init__(*args, **kwargs)
-
+    def __init__(self, license, version=None, *args, **kwargs):
+        super(CCLicense, self).__init__(license, version, *args, **kwargs)
         # If no version was set during initialization, we may assume the most recent version of a CC license and fetch that using the API
         if self.license and not self.version:
             data = CCLicense.get_cc_api_data(self.license)
@@ -290,13 +310,20 @@ def parse_license(license, version=None):
     for the license parameter already being a license object.
     """
 
-    if not license:
-        return License(license, version)
+    if license is None:
+        return license
+    elif license is "":
+        return None
+    elif isinstance(license, basestring):
+        if license == "ARR":
+            return ARRLicense(license,version)
+        elif license[0:5] == "CC-BY" or license == "CC0":
+            return CCLicense(license,version)
+        else:
+            raise ValueError('Invalid license.')
+    elif isinstance(license, dict):
+        return parse_license(license=license['license'], version=license['version'])
     elif isinstance(license, License):
         return license
-    elif license == "ARR":
-        return ARRLicense(license,version)
-    elif license[0:5] == "CC-BY" or license == "CC0":
-        return CCLicense(license,version)
     else:
         raise ValueError('Invalid license.')
