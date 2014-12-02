@@ -20,8 +20,8 @@ var AssetView = BaseView.extend({
       thumbnail: this.model.get('thumbnail'),
       date_added: this.model.get('date_added'),
       url: this.model.get('url'),
-      licenseable: this.licenseable,
-      license_img: this.licenseSelector.img(),
+      licenseable: this.model.get('licenseable'),
+      license: this.licenseSelector.img(),
       external_url: this.model.get('external_url'),
       portable_url: this.model.get('portable_url'),
       uniqueId: uniqueId
@@ -113,7 +113,7 @@ var AssetView = BaseView.extend({
     var saving = new NotificationView.Mini({
       title: gettext("Saving&hellip;")
     }).show();
-    asset.save({'license': this.licenseSelector.getLicense()}, {
+    asset.save({'license': this.licenseSelector.model}, {
       wait: true, // This means we won't re-render until we get back the success state.
       success: function() {
           saving.hide();

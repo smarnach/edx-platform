@@ -24,7 +24,7 @@ from xmodule.contentstore.content import StaticContent
 from xmodule.tabs import PDFTextbookTabs
 from xmodule.partitions.partitions import UserPartition
 from xmodule.modulestore import EdxJSONEncoder
-from xmodule.license import parse_license
+from xmodule.license import License
 
 from xmodule.modulestore.exceptions import ItemNotFoundError, DuplicateCourseError
 from opaque_keys import InvalidKeyError
@@ -380,7 +380,7 @@ def course_listing(request):
         # Add the license to the output it licensing is enabled and the course is licenseable
         if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False):
             fields['licenseable'] = course.licenseable
-            fields['license'] = course.license
+            fields['license'] = course.license.small_img
 
         return fields
 
@@ -408,7 +408,7 @@ def course_listing(request):
         # Add the license to the output it licensing is enabled and the course is licenseable
         if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False):
             fields['licenseable'] = uca.licenseable
-            fields['license'] = course.license
+            fields['license'] = uca.license.small_img
         return fields
 
     # remove any courses in courses that are also in the in_process_course_actions list
@@ -556,7 +556,7 @@ def _create_or_rerun_course(request):
         # Set course license if the licenscing is enabled and the course is licenseable
         if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False) and settings.FEATURES.get("DEFAULT_COURSE_LICENSEABLE", False):
             license = request.json.get('license')
-            fields['license'] = license
+            fields['license'] = License().from_json(license)
 
         if display_name is not None:
             fields['display_name'] = display_name

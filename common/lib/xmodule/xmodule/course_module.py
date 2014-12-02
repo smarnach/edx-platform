@@ -622,7 +622,11 @@ class CourseFields(object):
                               help="Whether to restrict enrollment to invitation by the course staff.",
                               default=False,
                               scope=Scope.settings)
-    license = License(help="License for this course", scope=Scope.settings)
+
+    license = License(display_name=_("License"),
+                      help=_("Select the license for this course. Reserve all rights, some rights or no rights."),
+                      default=None,
+                      scope=Scope.settings)
 
     licenseable = Boolean(display_name=_("Licenseable"),
                               help="Wheter this course and it's contents can be licensed using Creative Commons Licensing.",

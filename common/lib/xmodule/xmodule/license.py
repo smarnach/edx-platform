@@ -24,6 +24,7 @@ class License(JSONField):
     """
 
     _default = None
+    MUTABLE = False
 
     def __init__(self, license=None, version=None, *args, **kwargs):
         self.license = license
@@ -118,9 +119,9 @@ class License(JSONField):
         elif not field or field is "":
             return None
         elif isinstance(field, basestring):
-            if license == "ARR":
+            if field == "ARR":
                 return ARRLicense(field)
-            elif license[0:5] == "CC-BY" or license == "CC0":
+            elif field[0:5] == "CC-BY" or field == "CC0":
                 return CCLicense(field)
             else:
                 raise ValueError('Invalid license.')

@@ -17,7 +17,7 @@ var DetailsView = ValidatingView.extend({
         'focus :input' : "inputFocus",
         'blur :input' : "inputUnfocus",
         'click .action-upload-image': "uploadImage",
-        "click .license-button": "saveLicense",
+        // "click .license-button": "saveLicense",
     },
 
     initialize : function() {
@@ -28,6 +28,7 @@ var DetailsView = ValidatingView.extend({
         this.$el.find("#course-name").val(this.model.get('run'));
 
         this.licenseSelector = new LicenseSelector({model: this.model.get('license'), imgSize: "big"});
+        this.licenseSelector.model.on('change:license', this.saveLicense)
         this.$el.find("#course-license-form").html(this.licenseSelector.render().$el);
 
         this.$el.find('.set-date').datepicker({ 'dateFormat': 'm/d/yy' });
@@ -46,7 +47,7 @@ var DetailsView = ValidatingView.extend({
     },
 
     render: function() {
-        this.licenseSelector.setLicense(this.model.get('license'));
+        // this.licenseSelector.setLicense(this.model.get('license').license);
         this.setupDatePicker('start_date');
         this.setupDatePicker('end_date');
         this.setupDatePicker('enrollment_start');
@@ -84,11 +85,11 @@ var DetailsView = ValidatingView.extend({
         'course_image_asset_path': 'course-image-url'
     },
 
-    saveLicense: function(e) {
-        if (this.licenseSelector.license != this.licenseSelector.validate(this.model.get('license'))) {
-            this.model.set('license', this.licenseSelector.license);
-        }
-    },
+    // saveLicense: function(e) {
+    //     if (this.licenseSelector.getLicense() != this.model.get('license')) {
+    //         this.model.get('license').set('license', this.licenseSelector.license);
+    //     }
+    // },
     updateTime : function(e) {
         var now = new Date(),
             hours = now.getUTCHours(),

@@ -1,4 +1,4 @@
-define(["backbone", "underscore", "gettext"], function(Backbone, _, gettext) {
+define(["backbone", "underscore", "gettext", "js/models/license"], function(Backbone, _, gettext, licenseModel) {
 
 var CourseDetails = Backbone.Model.extend({
     defaults: {

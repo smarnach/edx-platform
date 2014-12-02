@@ -20,7 +20,7 @@ from xmodule.contentstore.content import StaticContent
 from xmodule.exceptions import NotFoundError
 from django.core.exceptions import PermissionDenied
 from opaque_keys.edx.keys import CourseKey, AssetKey
-from xmodule.license import parse_license
+from xmodule.license import License
 
 from util.date_utils import get_default_time_display
 from util.json_request import JsonResponse
@@ -237,7 +237,7 @@ def _upload_asset(request, course_key):
 
     # This sets the default license of the asset to the course license if licensing is enabled and the course is licenseable
     if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False) and course_module.licenseable:
-        content.license = course_module.license
+        content.license = License().to_json(course_module.license)
 
     # then commit the content
     contentstore().save(content)
@@ -338,6 +338,7 @@ def _get_asset_json(display_name, date, location, thumbnail_location, locked, li
         'url': asset_url,
         'external_url': external_url,
         'license': license,
+        'licenseable': license is not None,
         'portable_url': StaticContent.get_static_path_from_location(location),
         'thumbnail': StaticContent.serialize_asset_key_with_slash(thumbnail_location) if thumbnail_location else None,
         'locked': locked,

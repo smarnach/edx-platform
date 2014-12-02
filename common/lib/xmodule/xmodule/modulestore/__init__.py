@@ -1130,5 +1130,7 @@ class EdxJSONEncoder(json.JSONEncoder):
                     return obj.isoformat()
             else:
                 return obj.isoformat()
+        elif isinstance(obj, License):
+            return obj.to_json(obj)
         else:
             return super(EdxJSONEncoder, self).default(obj)

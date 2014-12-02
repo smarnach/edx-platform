@@ -31,7 +31,7 @@ from xmodule.modulestore.exceptions import ItemNotFoundError, InvalidLocationErr
 from xmodule.modulestore.inheritance import own_metadata
 from xmodule.modulestore.draft_and_published import DIRECT_ONLY_CATEGORIES
 from xmodule.x_module import PREVIEW_VIEWS, STUDIO_VIEW, STUDENT_VIEW
-from xmodule.license import parse_license
+from xmodule.license import License
 
 from xmodule.course_module import DEFAULT_START_DATE
 from django.contrib.auth.models import User
@@ -491,7 +491,7 @@ def _create_item(request):
             if license is not None:
                 metadata['license'] = license
             else: # Otherwise set the course license as the license for the item
-                metadata['license'] = course.license
+                metadata['license'] = License().to_json(course.license)
 
         # TODO need to fix components that are sending definition_data as strings, instead of as dicts
         # For now, migrate them into dicts here.

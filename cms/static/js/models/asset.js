@@ -9,7 +9,7 @@ define(["backbone"], function(Backbone) {
       date_added: "",
       url: "",
       license: null,
-      licenseable: "",
+      licenseable: false,
       external_url: "",
       portable_url: "",
       locked: false

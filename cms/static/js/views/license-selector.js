@@ -1,5 +1,5 @@
-define(["js/views/baseview", "underscore", "gettext"],
-    function(BaseView, _, gettext) {
+define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
+    function(BaseView, _, gettext, LicenseModel) {
 
         var LicenseSelector = BaseView.extend({
             events : {
@@ -10,25 +10,31 @@ define(["js/views/baseview", "underscore", "gettext"],
                 imgSize : false,
             },
 
-            initialize : function() {
+            initialize : function(options) {
                 this.template = this.loadTemplate("license-selector");
-                this.setLicense(this.model);
+                if (!this.model) {
+                    this.model = new LicenseModel();
+                }
+                else if (!(this.model instanceof LicenseModel)) {
+                    this.model = new LicenseModel(this.model)
+                }
+                this.setLicense(this.model.get('license'))
             },
 
             getLicense: function() {
-                return this.license;
+                return this.model.get('license') || "NONE";
             },
 
             setLicense: function(newLicense) {
-                this.license = this.validate(newLicense);
-                this.$el.find('.license').val(this.license);
+                this.model.set({'license': newLicense})
+                this.$el.find('.license').val(this.getLicense());
                 this.$el.find('.selected-license').html(this.img());
                 this.setLicenseButtons();
             },
 
             render: function() {
                 this.$el.html(this.template({
-                    default_license: this.license,
+                    default_license: this.getLicense(),
                     default_license_img: this.img()
                 }));
 
@@ -37,7 +43,7 @@ define(["js/views/baseview", "underscore", "gettext"],
                 if (this.options.buttonSize) {
                     this.$el.find('.license-button').addClass('size-'+this.options.buttonSize);
                 }
-                this.setLicenseButtons(this.license);
+                this.setLicenseButtons(this.model.license);
 
                 return this;
             },
@@ -46,8 +52,6 @@ define(["js/views/baseview", "underscore", "gettext"],
                 if (!license) {
                     license = this.getLicense();
                 }
-
-                
 
                 this.$el.find('.license-cc .license-button').removeClass('selected');
 
@@ -111,7 +115,7 @@ define(["js/views/baseview", "underscore", "gettext"],
             },
 
             img: function() {
-                var license = this.license.toLowerCase();
+                var license = this.getLicense().toLowerCase();
                 var imgSize;
 
                 if (this.options.imgSize=="big") {

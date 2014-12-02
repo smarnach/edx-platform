@@ -22,10 +22,10 @@ class VideoFields(object):
     )
 
     license = License(
-        help=_("The type of license for this module."),
+        help=_("Select the license for this video. Reserve all rights, some rights or no rights."),
         display_name=_("License"),
-        scope=Scope.settings,
-        default=None
+        default=None,
+        scope=Scope.settings
     )
 
     saved_video_position = RelativeTime(
