@@ -32,7 +32,7 @@ define(["domReady", "jquery", "underscore", "js/utils/cancel_on_escape", "js/vie
             var org = $newCourseForm.find('.new-course-org').val();
             var number = $newCourseForm.find('.new-course-number').val();
             var run = $newCourseForm.find('.new-course-run').val();
-            var license = $newCourseForm.find('.license').val();
+            var license = JSON.parse($newCourseForm.find('.license').val());
 
             course_info = {
                 org: org,

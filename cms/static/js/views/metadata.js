@@ -137,12 +137,12 @@ function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, V
         },
 
         getValueFromEditor : function () {
-            return this.licenseSelector.getLicense();
+            return this.licenseSelector.model;
         },
 
         setValueInEditor : function (value) {
             if (this.initialized) {
-                this.licenseSelector.setLicense(value);          
+                this.licenseSelector.model.set(value);          
             }
         }
     });

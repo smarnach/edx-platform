@@ -86,7 +86,7 @@ var DetailsView = ValidatingView.extend({
     },
 
     updateLicense: function(e) {
-        if (!this.model.has('license') || this.licenseSelector.getLicense() != this.model.get('license').license) {
+        if (!this.model.has('license') || this.licenseSelector.model.get('license') != this.model.get('license').license) {
             this.model.set('license', this.licenseSelector.model);
         }
     },

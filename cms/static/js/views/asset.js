@@ -102,7 +102,7 @@ var AssetView = BaseView.extend({
     },
 
   changeLicense: function() {
-    if (this.licenseSelector.getLicense() == this.model.get('license')) {
+    if (this.licenseSelector.model.get('license') == this.model.get('license')) {
       ModalUtils.hideModal(null,".change-license-modal");
       return;
     }

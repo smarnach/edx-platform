@@ -18,23 +18,19 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                 else if (!(this.model instanceof LicenseModel)) {
                     this.model = new LicenseModel(this.model)
                 }
-                this.setLicense(this.model.get('license'))
-            },
-
-            getLicense: function() {
-                return this.model.get('license') || "NONE";
+                
+                // Rerender on model change
+                this.listenTo(this.model, 'change', this.render);
             },
 
             setLicense: function(newLicense) {
                 this.model.set({'license': newLicense})
-                this.$el.find('.license').val(this.getLicense());
-                this.$el.find('.selected-license').html(this.img());
                 this.setLicenseButtons();
             },
 
             render: function() {
                 this.$el.html(this.template({
-                    default_license: this.getLicense(),
+                    default_license: this.model.get('license'),
                     default_license_img: this.img()
                 }));
 
@@ -43,16 +39,16 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                 if (this.options.buttonSize) {
                     this.$el.find('.license-button').addClass('size-'+this.options.buttonSize);
                 }
-                this.setLicenseButtons(this.model.license);
+
+                this.$el.find('.license').val(JSON.stringify(this.model.toJSON()));
+                this.$el.find('.selected-license').html(this.img());
+                this.setLicenseButtons();
 
                 return this;
             },
 
-            setLicenseButtons : function(license) {
-                if (!license) {
-                    license = this.getLicense();
-                }
-
+            setLicenseButtons : function() {
+                var license = this.model.get('license');
                 this.$el.find('.license-cc .license-button').removeClass('selected');
 
                 if (!license || license == "NONE") {
@@ -91,31 +87,8 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                 return this;
             },
 
-            validate: function(license) {
-                var validLicense;
-
-                if (!license) {
-                    validLicense = "NONE";
-                }
-                else if (license == "ARR" || license == "CC0") {
-                    validLicense = license;
-                }
-                else {
-                    var attr = license.split("-");
-
-                    if (attr.length >1 && attr[0]=="CC" && attr[1]=="BY") {
-                        validLicense = attr.join("-");
-                    }
-                    else {
-                        validLicense = "NONE";
-                    }
-                }
-
-                return validLicense;
-            },
-
             img: function() {
-                var license = this.getLicense().toLowerCase();
+                var license = this.model.get('license').toLowerCase();
                 var imgSize;
 
                 if (this.options.imgSize=="big") {
@@ -182,8 +155,7 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                     
                 }
 
-                this.setLicense(license);
-                this.setLicenseButtons(license);
+                this.model.set('license', license)
 
                 return this;
             },
