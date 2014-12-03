@@ -72,6 +72,7 @@ var DetailsView = ValidatingView.extend({
 
         return this;
     },
+
     fieldToSelectorMap : {
         'start_date' : "course-start",
         'end_date' : 'course-end',
@@ -85,10 +86,11 @@ var DetailsView = ValidatingView.extend({
     },
 
     updateLicense: function(e) {
-        if (this.licenseSelector.getLicense() != this.model.get('license').license) {
+        if (!this.model.has('license') || this.licenseSelector.getLicense() != this.model.get('license').license) {
             this.model.set('license', this.licenseSelector.model);
         }
     },
+
     updateTime : function(e) {
         var now = new Date(),
             hours = now.getUTCHours(),

@@ -153,7 +153,7 @@
                     <span class="course-run metadata-item">
                       <span class="label">${_("Course Run:")}</span> <span class="value">${course_info['run']}</span>
                     </span>
-                    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course_info['license'] is not UNDEFINED:
+                    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course_info['license'] is not UNDEFINED and course_info['license'] is not None:
                     <span class="course-license metadata-item">
                       <span class="label">${_("Course License:")}</span> <span class="value">${course_info['license'].small_img}</span>
                     </span>
@@ -200,7 +200,7 @@
                     <span class="course-run metadata-item">
                       <span class="label">${_("Course Run:")}</span> <span class="value">${course_info['run']}</span>
                     </span>
-                    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course_info['license'] is not UNDEFINED:
+                    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course_info['license'] is not UNDEFINED and course_info['license'] is not None:
                     <span class="course-license metadata-item">
                       <span class="label">${_("Course License:")}</span> <span class="value">${course_info['license'].small_img}</span>
                     </span>
@@ -255,7 +255,7 @@
                 <span class="course-run metadata-item">
                   <span class="label">${_("Course Run:")}</span> <span class="value">${course_info['run']}</span>
                 </span>
-                % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course_info['license'] is not UNDEFINED:
+                % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course_info['license'] is not UNDEFINED and course_info['license'] is not None:
                 <span class="course-license metadata-item">
                   <span class="label">${_("Course License:")}</span> <span class="value">${course_info['license'].small_img}</span>
                 </span>

@@ -149,7 +149,7 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
             },
 
              onLicenseButtonClick : function(e) {
-                var $button = $(e.srcElement).closest('.license-button');
+                var $button = $(e.srcElement || e.target).closest('.license-button');
                 var $allornothing = this.$el.find('.license-allornothing');
                 var $cc = this.$el.find('.license-cc');
 
