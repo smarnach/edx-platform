@@ -105,7 +105,7 @@
     </div>
 </div>
 
-% if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and context_course.licenseable:
+% if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and context_course.license is not UNDEFINED:
 <div class="change-license-modal modal">
     <a href="#" class="close-button"><i class="icon-remove-sign"></i> <span class="sr">${_('close')}</span></a>
     <div class="modal-body">

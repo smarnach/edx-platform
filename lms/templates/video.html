@@ -1,6 +1,7 @@
 <%! from django.utils.translation import ugettext as _ %>
 <%! from django.conf import settings %>
 <%! from xmodule.license import parse_license %>
+<%! import pudb %>
 
 % if display_name is not UNDEFINED and display_name is not None:
     <h2>${display_name}</h2>
@@ -100,7 +101,7 @@
 
       % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and licenseable is not UNDEFINED and license is not UNDEFINED and licenseable:
         <div class="license">
-          ${license}
+          ${license.html}
         </div>
       % endif
 

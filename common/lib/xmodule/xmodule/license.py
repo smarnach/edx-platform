@@ -222,7 +222,7 @@ class CCLicense(License):
         """
 
         # If the text hasn't been stored already, fetch it using the API
-        if not self.text:
+        if not hasattr(self, 'text'):
             data = CCLicense.get_cc_api_data(self.license)
 
             # Change the tag to be a paragraph

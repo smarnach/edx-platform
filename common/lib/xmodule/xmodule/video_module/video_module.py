@@ -237,11 +237,12 @@ class VideoModule(VideoFields, VideoTranscriptsMixin, VideoStudentViewHandlers, 
             course = self.runtime.modulestore.get_course(course_id)
 
         licenseable = False
-        license = None
+        license = self.license
         if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False):
-            licenseable = course.licenseable if course is not None else True
-            if licenseable:
-                license = self.license
+            if license is not None:
+                licenseable = True
+            elif course is not None:
+                licenseable = course.licenseable
 
         return self.system.render_template('video.html', {
             'ajax_url': self.system.ajax_url + '/save_user_state',

@@ -375,12 +375,9 @@ def course_listing(request):
             'org': course.display_org_with_default,
             'number': course.display_number_with_default,
             'run': course.location.run,
+            'license': course.license,
+            'licenseable': course.licenseable
         }
-
-        # Add the license to the output it licensing is enabled and the course is licenseable
-        if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False):
-            fields['licenseable'] = course.licenseable
-            fields['license'] = course.license.small_img
 
         return fields
 
@@ -394,6 +391,8 @@ def course_listing(request):
             'org': uca.course_key.org,
             'number': uca.course_key.course,
             'run': uca.course_key.run,
+            'license': uca.license,
+            'licenseable': uca.licenseable,
             'is_failed': True if uca.state == CourseRerunUIStateManager.State.FAILED else False,
             'is_in_progress': True if uca.state == CourseRerunUIStateManager.State.IN_PROGRESS else False,
             'dismiss_link': reverse_course_url(
@@ -405,10 +404,6 @@ def course_listing(request):
             ) if uca.state == CourseRerunUIStateManager.State.FAILED else ''
         }
 
-        # Add the license to the output it licensing is enabled and the course is licenseable
-        if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False):
-            fields['licenseable'] = uca.licenseable
-            fields['license'] = uca.license.small_img
         return fields
 
     # remove any courses in courses that are also in the in_process_course_actions list
