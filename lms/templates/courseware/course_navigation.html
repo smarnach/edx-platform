@@ -96,7 +96,7 @@ masq = (function(){
   % endif
 % endif
 
-% if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course.licenseable and course.license:
+% if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course.license is not UNDEFINED and course.license is not None:
   <script type="text/javascript">
         $(document).ready(function() {
           $(".copyright").append($("#license").show());
@@ -104,6 +104,6 @@ masq = (function(){
         });
   </script>
   <div id="license" style="display:none;">
-    ${parse_license(course.license, course.license_version).html}
+    ${course.license.html}
   </div>
 % endif

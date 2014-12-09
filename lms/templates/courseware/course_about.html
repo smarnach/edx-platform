@@ -218,7 +218,7 @@
 
       <div class="inner-wrapper">
         ${get_course_about_section(course, "overview")}
-        % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course.licenseable:
+        % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course.license is not UNDEFINED and course.license is not None:
         ${get_course_license_section(course)}
         % endif
       </div>

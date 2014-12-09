@@ -284,11 +284,7 @@ FEATURES = {
     'ENABLE_MOBILE_REST_API': False,
 
     # Whether or not to enable Creative Commons Licensing ability for courses
-    'CREATIVE_COMMONS_LICENSING': False,
-
-    # The default value for the licenseable field of the course module.
-    # This determines whether a course is licenseable or not by default, and will do nothing unless CREATIVE_COMMONS_LICENSING is True
-    'DEFAULT_COURSE_LICENSEABLE': False, 
+    'CREATIVE_COMMONS_LICENSING': True,
 
     # Enable the new dashboard, account, and profile pages
     'ENABLE_NEW_DASHBOARD': False,

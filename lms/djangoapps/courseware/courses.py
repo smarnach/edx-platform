@@ -241,26 +241,9 @@ def get_course_license_section(course):
     This returns the snippet of html to be rendered on the course about page unde the license section,
     given the course.
     """
-    license = parse_license(course.license, course.license_version)
-
     html = "<h2>{title}</h2>{content}".format(
         title=_("License"),
-        content=license.html
-    )
-
-    return html
-
-
-def get_course_license_section(course):
-    """
-    This returns the snippet of html to be rendered on the course about page unde the license section,
-    given the course.
-    """
-    license = parse_license(course.license, course.license_version)
-
-    html = "<h2>{title}</h2>{content}".format(
-        title=_("License"),
-        content=license.html
+        content=course.license.html
     )
 
     return html
