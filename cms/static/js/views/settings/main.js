@@ -17,7 +17,7 @@ var DetailsView = ValidatingView.extend({
         'focus :input' : "inputFocus",
         'blur :input' : "inputUnfocus",
         'click .action-upload-image': "uploadImage",
-        "click .license-button": "updateLicense",
+        'click .license-button': "updateLicense",
     },
 
     initialize : function() {
@@ -27,7 +27,10 @@ var DetailsView = ValidatingView.extend({
         this.$el.find("#course-number").val(this.model.get('course_id'));
         this.$el.find("#course-name").val(this.model.get('run'));
 
-        this.licenseSelector = new LicenseSelector({model: this.model.get('license'), imgSize: "big"});
+        this.licenseSelector = new LicenseSelector({
+            model: this.model.get('license'),
+            imgSize: "big"
+        });
         this.$el.find("#course-license-form").html(this.licenseSelector.render().$el);
 
         this.$el.find('.set-date').datepicker({ 'dateFormat': 'm/d/yy' });
@@ -46,7 +49,6 @@ var DetailsView = ValidatingView.extend({
     },
 
     render: function() {
-        // this.licenseSelector.setLicense(this.model.get('license').license);
         this.setupDatePicker('start_date');
         this.setupDatePicker('end_date');
         this.setupDatePicker('enrollment_start');

@@ -338,14 +338,6 @@ class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandler
                 if not download_video['explicitly_set']:
                     self.download_video = True
 
-#        log.info(VideoDescriptor.course_id)
-        # TODO: Unsure if this is the proper way to do this. Pleasy verify and update if necessary
-#        if hasattr(settings, 'FEATURES') and settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and not(self.license):
-#            course = self.runtime.modulestore.get_course(VideoDescriptor.course_id)
-#
-#            self.license = course.license
-#            self.license_version = course.license_version
-
         # for backward compatibility.
         # If course was existed and was not re-imported by the moment of adding `download_track` field,
         # we should enable `download_track` if following is true:
@@ -546,7 +538,7 @@ class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandler
 
         metadata = {
             'display_name': display_name,
-            'video_url': video_url,
+            'video_url': video_url
         }
 
         if hasattr(settings, 'FEATURES') and settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False):

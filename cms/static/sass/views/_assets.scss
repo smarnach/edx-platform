@@ -501,29 +501,29 @@
   }
  
   .close-button {
-      @include transition(color $tmg-f2 ease-in-out 0s);
-      position: absolute;
-      top: 0;
-      right: ($baseline*0.75);
-      border: none;
-      background: none;
-      padding: 0;
+    @include transition(color $tmg-f2 ease-in-out 0s);
+    position: absolute;
+    top: 0;
+    right: ($baseline*0.75);
+    border: none;
+    background: none;
+    padding: 0;
 
-      [class^="icon-"] {
-        @extend %t-action1;
-      }
-
-      &:hover {
-        background: none;
-        box-shadow: none;
-        color: $blue;
-      }
+    [class^="icon-"] {
+      @extend %t-action1;
     }
 
+    &:hover {
+      background: none;
+      box-shadow: none;
+      color: $blue;
+    }
+  }
+
   .save-license-button {
-      @include blue-button;
-      position: absolute;
-      right: ($baseline*0.75);
+    @include blue-button;
+    position: absolute;
+    right: ($baseline*0.75);
   }
 
   .button-spacer {

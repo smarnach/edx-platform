@@ -2,15 +2,15 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
     function(BaseView, _, gettext, LicenseModel) {
 
         var LicenseSelector = BaseView.extend({
-            events : {
+            events: {
                 "click .license-button" : "onLicenseButtonClick",
             },
-            options : {
+            options: {
                 buttonSize : false,
                 imgSize : false,
             },
 
-            initialize : function(options) {
+            initialize: function(options) {
                 this.template = this.loadTemplate("license-selector");
                 if (!this.model) {
                     this.model = new LicenseModel();
@@ -37,7 +37,7 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                 this.$el.addClass('license-selector');
 
                 if (this.options.buttonSize) {
-                    this.$el.find('.license-button').addClass('size-'+this.options.buttonSize);
+                    this.$el.find('.license-button').addClass('size-' + this.options.buttonSize);
                 }
 
                 this.$el.find('.license').val(JSON.stringify(this.model.toJSON()));
@@ -47,7 +47,7 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                 return this;
             },
 
-            setLicenseButtons : function() {
+            setLicenseButtons: function() {
                 var license = this.model.get('license');
                 this.$el.find('.license-cc .license-button').removeClass('selected');
 
@@ -67,15 +67,15 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                 else {
                     var attr = license.split("-");
 
-                    if (attr.length >1 && attr[0]=="CC" && attr[1]=="BY") {
+                    if (attr.length > 1 && attr[0] == "CC" && attr[1] == "BY") {
                         for(i in attr) {
-                            this.$el.find('.license-button[data-license="'+attr[i]+'"]').addClass('selected');               
+                            this.$el.find('.license-button[data-license="' + attr[i] + '"]').addClass('selected');
                         }
                     }
                 }
 
                 // Toggle between custom license and allornothing
-                if (license=="ARR" || license=="CC0") {
+                if (license == "ARR" || license == "CC0") {
                     this.$el.find('.license-allornothing').addClass('selected');
                     this.$el.find('.license-cc').removeClass('selected');
                 }
@@ -88,23 +88,23 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
             },
 
             img: function() {
-                var license = this.model.get('license').toLowerCase();
-                var imgSize;
+                var license, imgSize, imgUrl;
+                license = this.model.get('license').toLowerCase();
 
-                if (this.options.imgSize=="big") {
+                if (this.options.imgSize == "big") {
                     imgSize = "88x31";
                 }
                 else {
                     imgSize = "80x15";
                 }
                 
-                var img_url = "";
+                imgUrl = "";
                 switch(license) {
                     case "arr":
-                        img_url = window.baseUrl+'images/arr/';
+                        imgUrl = window.baseUrl + 'images/arr/';
                     break;
                     case "cc0":
-                        img_url = "http://i.creativecommons.org/l/zero/1.0/";
+                        imgUrl = "http://i.creativecommons.org/l/zero/1.0/";
                     break;
                     case "none":
                         return "None";
@@ -112,22 +112,20 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                     
                     // Creative commons license
                     default:
-                    img_url = 'http://i.creativecommons.org/l/' + license.substring(3,license.length) + "/3.0/";
-
+                        imgUrl = 'http://i.creativecommons.org/l/' + license.substring(3, license.length) + "/3.0/";
                 }
 
-                var img = "<img src='"+img_url+imgSize+".png' />"
-             
-                return img;
+                return "<img src='" + imgUrl + imgSize + ".png' />";
             },
 
-             onLicenseButtonClick : function(e) {
-                var $button = $(e.srcElement || e.target).closest('.license-button');
-                var $allornothing = this.$el.find('.license-allornothing');
-                var $cc = this.$el.find('.license-cc');
+            onLicenseButtonClick: function(e) {
+                var $button, $allornothing, $cc, license, selected;
 
-                var license;
-                if($cc.has($button).length==0) {
+                $button = $(e.srcElement || e.target).closest('.license-button');
+                $allornothing = this.$el.find('.license-allornothing');
+                $cc = this.$el.find('.license-cc');
+
+                if($cc.has($button).length == 0) {
                     license = $button.attr("data-license");
                 }
                 else {
@@ -146,21 +144,20 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                     else {
                         license = "CC";
                         $cc.children(".license-button[data-license='BY']").addClass("selected");
-                        var selected = $cc.children(".selected");
+                        selected = $cc.children(".selected");
                         selected.each( function() {
                             license = license + "-" + $(this).attr("data-license");
-                        })
+                        });
                     }
-
-                    
                 }
 
-                this.model.set('license', license)
+                this.model.set('license', license);
 
                 return this;
             },
 
-            });
+        });
 
         return LicenseSelector;
-    }); // end define();
+    }
+); // end define();

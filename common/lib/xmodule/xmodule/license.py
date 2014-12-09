@@ -39,21 +39,6 @@ class License(JSONField):
 
         return ""
 
-    # def __str__(self):
-    #     """
-    #     Return a string representation of the license
-    #     """
-    #     return self.license
-
-    # def __get__(self, instance, owner):
-    #     return instance
-
-    # def __set__(self, instance, value):
-    #     """
-    #     Define a setter so the `license` property can be modified by setting the instance to a valid license String
-    #     """
-    #     instance.license = value
-
     def img(self, big=False):
         """
         Return a piece of html with a reference to a license image
@@ -95,7 +80,6 @@ class License(JSONField):
 
         This method should be overridden in child classes to provide the desired html.
         """
-
         return u"<p>" + _("This resource is not licensed.") + u"</p>"
 
     def to_json(self, value):
@@ -148,7 +132,6 @@ class ARRLicense(License):
         """
         Return the image base url for an 'All rights Reserved'
         """
-
         return settings.STATIC_URL + "images/arr/"
 
     @property
@@ -156,7 +139,6 @@ class ARRLicense(License):
         """
         Return a piece of html that descripts the license
         """
-
         phrase = _("All rights are reserved for this work.")
 
         return "<p>{phrase}<br/>{img}</p>".format(
@@ -330,3 +312,4 @@ def parse_license(license, version=None):
         return license
     else:
         raise ValueError('Invalid license.')
+

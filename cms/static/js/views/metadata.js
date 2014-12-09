@@ -44,7 +44,7 @@ function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, V
                         new Metadata[type](data);
                     } else {
                        // Everything else is treated as GENERIC_TYPE, which uses String editor.
-                        new Metadata.String(data); 
+                        new Metadata.String(data);
                     }
                 });
         },
@@ -120,7 +120,7 @@ function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, V
 
     Metadata.License = AbstractEditor.extend({
 
-        events : {
+        events: {
             "click .license-button" : "updateModel",
         },
 
@@ -131,16 +131,19 @@ function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, V
 
             // Render selector
             if (!this.initialized) {
-                this.licenseSelector = new LicenseSelector({model: this.model.getValue(), buttonSize: "middle"});            
+                this.licenseSelector = new LicenseSelector({
+                    model: this.model.getValue(),
+                    buttonSize: "middle"
+                });
             }
             this.$el.find('.wrapper-license-selector').html(this.licenseSelector.render().$el);
         },
 
-        getValueFromEditor : function () {
+        getValueFromEditor: function () {
             return this.licenseSelector.model;
         },
 
-        setValueInEditor : function (value) {
+        setValueInEditor: function (value) {
             if (this.initialized) {
                 this.licenseSelector.model.set(value);          
             }

@@ -498,7 +498,6 @@ def _create_item(request):
         if isinstance(data, basestring):
             data = {'data': data}
 
-
         created_block = store.create_child(
             request.user.id,
             usage_key,
@@ -522,7 +521,6 @@ def _create_item(request):
                 )
             )
             store.update_item(course, request.user.id)
-
 
         return JsonResponse({"locator": unicode(created_block.location), "courseKey": unicode(created_block.location.course_key)})
 
