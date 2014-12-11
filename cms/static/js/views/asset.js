@@ -4,7 +4,9 @@ var AssetView = BaseView.extend({
   initialize: function() {
     this.template = this.loadTemplate("asset");
     this.listenTo(this.model, "change:locked", this.updateLockState);
-    this.licenseSelector = new LicenseSelector({model:this.model.get('license'), buttonSize: 'middle'});
+    this.licenseSelector = new LicenseSelector({
+        model: this.model.get('license')
+    });
   },
   tagName: "tr",
   events: {
@@ -116,7 +118,7 @@ var AssetView = BaseView.extend({
         wait: true, // This means we won't re-render until we get back the success state.
         success: function() {
             saving.hide();
-            view.$el.find('.license-img').html(view.licenseSelector.img());
+            view.$el.find('.license-holder').html(view.licenseSelector.renderLicense());
             ModalUtils.hideModal(null, ".change-license-modal");
         }
     });

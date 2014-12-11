@@ -6,7 +6,6 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                 "click .license-button" : "onLicenseButtonClick",
             },
             options: {
-                buttonSize : false,
                 imgSize : false,
             },
 
@@ -25,130 +24,127 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
 
             setLicense: function(newLicense) {
                 this.model.set({'license': newLicense})
-                this.setLicenseButtons();
             },
 
             render: function() {
                 this.$el.html(this.template({
                     default_license: this.model.get('license'),
-                    default_license_img: this.img()
+                    default_license_preview: this.renderLicense()
                 }));
 
                 this.$el.addClass('license-selector');
 
-                if (this.options.buttonSize) {
-                    this.$el.find('.license-button').addClass('size-' + this.options.buttonSize);
-                }
-
-                this.$el.find('.license').val(JSON.stringify(this.model.toJSON()));
-                this.$el.find('.selected-license').html(this.img());
                 this.setLicenseButtons();
 
                 return this;
             },
 
             setLicenseButtons: function() {
-                var license = this.model.get('license');
-                this.$el.find('.license-cc .license-button').removeClass('selected');
+                var license, $cc;
+                license = this.model.get('license');
+                $cc = this.$el.find('.selected-cc-license-options');
 
-                if (!license || license == "NONE") {
-                    this.$el.find('.license-button').removeClass('selected');
-                    this.$el.find('.license-allornothing').removeClass('selected');
-                    this.$el.find('.license-cc').removeClass('selected');
-                }
-                else if (license == "ARR") {
+                if (!license || license == "NONE" || license == "ARR") {
                     this.$el.find('.license-button[data-license="ARR"]').addClass('selected');
-                    this.$el.find('.license-button[data-license="CC0"]').removeClass('selected');
-                }
-                else if (license == "CC0") {
-                    this.$el.find('.license-button[data-license="CC0"]').addClass('selected');
-                    this.$el.find('.license-button[data-license="ARR"]').removeClass('selected');
+                    this.$el.find('.license-button[data-license="CC"]').removeClass('selected');
+                    $cc.hide();
                 }
                 else {
                     var attr = license.split("-");
-
-                    if (attr.length > 1 && attr[0] == "CC" && attr[1] == "BY") {
-                        for(i in attr) {
-                            this.$el.find('.license-button[data-license="' + attr[i] + '"]').addClass('selected');
-                        }
+                    this.$el.find('.license-button').removeClass('selected');
+                    for(i in attr) {
+                        this.$el.find('.license-button[data-license="' + attr[i] + '"]').addClass('selected');
                     }
-                }
-
-                // Toggle between custom license and allornothing
-                if (license == "ARR" || license == "CC0") {
-                    this.$el.find('.license-allornothing').addClass('selected');
-                    this.$el.find('.license-cc').removeClass('selected');
-                }
-                else if (license != "NONE") {
-                    this.$el.find('.license-cc').addClass('selected');
-                    this.$el.find('.license-allornothing').removeClass('selected').children().removeClass("selected");
+                    $cc.show();
                 }
 
                 return this;
             },
 
-            img: function() {
-                var license, imgSize, imgUrl;
-                license = this.model.get('license').toLowerCase();
-
-                if (this.options.imgSize == "big") {
-                    imgSize = "88x31";
-                }
-                else {
-                    imgSize = "80x15";
-                }
+            renderLicense: function() {
+                var license, licenseHtml, licenseText, licenseLink, licenseTooltip;
+                license = (this.model.get('license') || "none").toLowerCase();
                 
-                imgUrl = "";
                 switch(license) {
-                    case "arr":
-                        imgUrl = window.baseUrl + 'images/arr/';
-                    break;
-                    case "cc0":
-                        imgUrl = "http://i.creativecommons.org/l/zero/1.0/";
-                    break;
                     case "none":
-                        return "None";
-                    break;
-                    
-                    // Creative commons license
+                    case "arr":
+                        // All rights reserved
+                        licenseText = gettext("All rights reserved")
+                        return "<span class='license-icon license-arr'></span><span class='license-text'>" + licenseText + "</span>";
+                    case "cc0":
+                        // Creative commons zero license
+                        licenseText = gettext("No rights reserved")
+                        return "<a rel='license' href='http://creativecommons.org/publicdomain/zero/1.0/' target='_blank'><span class='license-icon license-cc0'></span><span class='license-text'>" + licenseText + "</span></a>";
                     default:
-                        imgUrl = 'http://i.creativecommons.org/l/' + license.substring(3, license.length) + "/3.0/";
+                        // Creative commons license
+                        licenseVersion = "4.0";
+                        licenseHtml = "";
+                        licenseLink = [];
+                        licenseText = [];
+                        if(/by/.exec(license)){
+                            licenseHtml += "<span class='license-icon license-cc-by'></span>";
+                            licenseLink.push("by");
+                            licenseText.push(gettext("Attribution"));
+                        }
+                        if(/nc/.exec(license)){
+                            licenseHtml += "<span class='license-icon license-cc-nc'></span>";
+                            licenseLink.push("nc");
+                            licenseText.push(gettext("NonCommercial"));
+                        }
+                        if(/sa/.exec(license)){
+                            licenseHtml += "<span class='license-icon license-cc-sa'></span>";
+                            licenseLink.push("sa");
+                            licenseText.push(gettext("ShareAlike"));
+                        }
+                        if(/nd/.exec(license)){
+                            licenseHtml += "<span class='license-icon license-cc-nd'></span>";
+                            licenseLink.push("nd");
+                            licenseText.push(gettext("NonDerivatives"));
+                        }
+                        licenseTooltip = interpolate(gettext("This work is licensed under a Creative Commons %(license_attributes)s %(version)s International License."), {
+                                license_attributes: licenseText.join("-"),
+                                version: licenseVersion
+                            }, true);
+                        return "<a rel='license' href='http://creativecommons.org/licenses/" +
+                            licenseLink.join("-") + "/" + licenseVersion + "/' data-tooltip='" + licenseTooltip +
+                            "' target='_blank' class='license'>" +
+                            licenseHtml +
+                            "<span class='license-text'>" +
+                            gettext("Some rights reserved") +
+                            "</span></a>";
                 }
-
-                return "<img src='" + imgUrl + imgSize + ".png' />";
             },
 
             onLicenseButtonClick: function(e) {
-                var $button, $allornothing, $cc, license, selected;
+                var $button, $cc, buttonLicense, license, selected;
 
                 $button = $(e.srcElement || e.target).closest('.license-button');
-                $allornothing = this.$el.find('.license-allornothing');
-                $cc = this.$el.find('.license-cc');
+                $cc = this.$el.find('.license-cc-options');
+                buttonLicense = $button.attr("data-license");
 
-                if($cc.has($button).length == 0) {
-                    license = $button.attr("data-license");
+                if(buttonLicense == "ARR"){
+                    license = buttonLicense;
                 }
                 else {
+                    if($button.hasClass('selected') && (buttonLicense == "CC" || buttonLicense == "BY")){
+                        // Abort, this attribute is not allowed to be unset through another click
+                        return this;
+                    }
                     $button.toggleClass("selected");
 
-                    if ($button.attr("data-license") == "ND" && $button.hasClass("selected")) {
+                    if (buttonLicense == "ND" && $button.hasClass("selected")) {
                         $cc.children(".license-button[data-license='SA']").removeClass("selected");
                     }
-                    else if($button.attr("data-license") == "SA"&& $button.hasClass("selected")) {
+                    else if(buttonLicense == "SA" && $button.hasClass("selected")) {
                         $cc.children(".license-button[data-license='ND']").removeClass("selected");
                     }
 
-                    if ($button.attr("data-license") == "BY" && !$button.hasClass("selected")) {
-                        license = "CC0";
-                    }
-                    else {
-                        license = "CC";
-                        $cc.children(".license-button[data-license='BY']").addClass("selected");
-                        selected = $cc.children(".selected");
-                        selected.each( function() {
-                            license = license + "-" + $(this).attr("data-license");
-                        });
-                    }
+                    license = "CC";
+                    $cc.children(".license-button[data-license='BY']").addClass("selected");
+                    selected = $cc.children(".selected");
+                    selected.each( function() {
+                        license = license + "-" + $(this).attr("data-license");
+                    });
                 }
 
                 this.model.set('license', license);

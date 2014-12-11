@@ -22,7 +22,7 @@ class VideoFields(object):
     )
 
     license = License(
-        help=_("Select the license for this video. Reserve all rights, some rights or no rights."),
+        help=_("Select the license for this video. Reserve all rights, or waive some of the rights."),
         display_name=_("License"),
         default=None,
         scope=Scope.settings

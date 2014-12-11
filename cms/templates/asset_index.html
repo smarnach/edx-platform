@@ -106,13 +106,13 @@
 </div>
 
 % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and context_course.license is not UNDEFINED:
-<div class="change-license-modal modal">
-    <a href="#" class="close-button"><i class="icon-remove-sign"></i> <span class="sr">${_('close')}</span></a>
-    <div class="modal-body">
-        <h2>Change Asset License</h2>
-    </div>
-    <a class="save-license-button button">${_("Save License")}</a>
-</div>
+  <div class="change-license-modal modal">
+      <a href="#" class="close-button"><i class="icon-remove-sign"></i> <span class="sr">${_('close')}</span></a>
+      <div class="modal-body">
+          <h2>Change Asset License</h2>
+      </div>
+      <a class="save-license-button button">${_("Save License")}</a>
+  </div>
 % endif
 
 

@@ -139,90 +139,6 @@ form {
 }
 
 
-@mixin license-button {
-  @include grey-button;
-  @extend %t-action2;
-
-  padding: ($baseline/2) !important;
-  display: inline-block;
-
-  text-align: center;
-  vertical-align: middle !important;
-
-  width: 100%;
-  max-width: 18%;
-  height: 200px;
-
-  cursor: pointer;
-  
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-
-  .icon {
-      width: 64px;
-      height: 64px;
-      display: inline-block;
-      vertical-align: middle !important;
-      margin: 3px;
-  }
-
-  .buttontext {
-    font-size: 11px;
-    font-weight: normal;
-    line-height: 1.5;
-    vertical-align: middle !important;
-
-    h4 {
-      font-size: 13px;
-      font-weight: bold;
-    }
-  }
-
-  &.selected {
-    @include blue-button;
-  }
-
-  &.size-small {
-    .buttontext {
-      display: none !important;
-    }
-  }
-
-  &.size-middle {
-    .icon {
-      display: none !important;
-    }
-  }
-
-  &[data-license^="ARR"] .icon {
-    background: url(../img/arr/arr.png) no-repeat center;
-  }
-
-  &[data-license^="CC0"] .icon {
-    background: url(../img/cc/zero.png) no-repeat center;
-  }
-
-  &[data-license^="BY"] .icon {
-    background: url(../img/cc/by.png) no-repeat center;
-  }
-
-  &[data-license^="NC"] .icon {
-    background: url(../img/cc/nc.png) no-repeat center;
-  }
-
-  &[data-license^="ND"] .icon {
-    background: url(../img/cc/nd.png) no-repeat center;
-  }
-
-  &[data-license^="SA"] .icon {
-    background: url(../img/cc/sa.png) no-repeat center;
-  }
-}
-
 .license-img {
   padding: 4px;
 }
@@ -231,66 +147,98 @@ form {
 .license-selector {
   text-align: middle;
 
-  .license-buttons {
-    margin: 3px;
-    text-align: center;
+  .action.license-button {
+    @include grey-button;
+    @extend %t-action2;
+
+    padding: ($baseline/2) !important;
     display: inline-block;
-    border: 1px solid grey;
-    border-radius: 4px;
-  }
 
-  .license-allornothing, .license-cc {
-    padding: ($baseline/2);
     text-align: center;
-    display: inline-block;
-    width: 100%;
+    vertical-align: middle !important;
 
+    width: 220px;
+    height: 40px;
+
+    cursor: pointer;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    &.selected {
+      @include blue-button;
+    }
   }
-
-  .license-allornothing {
+  .license-cc-options {
     li {
-      @include license-button;
-      max-width: 39%;
-      height: auto;
-
-      .buttontext {
+      line-height: 1.5;
+      border-bottom: 1px solid #EEE;
+      padding: 10px 0 8px;
+      &.clickable {
+        cursor: pointer;
+      }
+      &.last {
+        border-bottom: none;
+      }
+      i.icon-check, i.icon-unchecked {
+        vertical-align: top;
+        margin: 3px 15px 0 10px;
+      }
+      i.icon-unchecked {
         display: inline-block;
-        max-width: 75%;
       }
-
-      &.size-middle {
-        height: 100px;
+      i.icon-check {
+        color: $blue;
+        display: none;
+        margin-right: 13px;
+      }
+      i.icon-check.disabled {
+        color: $gray;
+      }
+      &.selected {
+        i.icon-check {
+          display: inline-block;
+        }
+        i.icon-unchecked {
+          display: none;
+        }
+      }
+      h4 {
+        display: inline-block;
+        width: 15%;
+        font-size: 13px;
+        font-weight: bold;
+        vertical-align: top;
+      }
+      div.explanation {
+        display: inline-block;
+        width: 75%;
+        font-size: 11px;
+        vertical-align: top;
+        color: $gray;
       }
     }
   }
 
-  .license-cc {
-    li {
-      @include license-button;
-      
-      .buttontext {
-        margin-top: 5px;
-      }
-
-      &.size-middle {
-        height: 200px;
-      }
-    }
+  .tip {
+    font-size: 1.2rem;
+    line-height: 1.776rem;
+    margin: 6px 0;
   }
-
-  .selected-license-text {
-    label {
-      font-weight: bold !important;
-      margin: 1px;
-      display: inline-block !important;
-      vertical-align: middle;
-    }
-
-    .selected-license {
-      display: inline-block;
-      vertical-align: bottom;
-    }  
-
+  .selected-cc-license-options {
+    margin: 10px 0 0;
+  }
+  .selected-cc-license-options, .selected-license-text {
+    border-top: 1px solid $gray-l5;
+    padding: 10px 0;
+  }
+  .selected-license {
+    display: inline-block;
+    vertical-align: bottom;
   }
 }
 

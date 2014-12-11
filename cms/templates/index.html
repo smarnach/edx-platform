@@ -8,9 +8,9 @@
 <%block name="header_extras">
 % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False):
   % for template_name in ["license-selector"]:
-  <script type="text/template" id="${template_name}-tpl">
-      <%static:include path="js/${template_name}.underscore" />
-  </script>
+    <script type="text/template" id="${template_name}-tpl">
+        <%static:include path="js/${template_name}.underscore" />
+    </script>
   % endfor
 % endif
 </%block>
@@ -111,7 +111,7 @@
                   <span class="tip tip-error is-hiding"></span>
                 </li>
                 % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and settings.FEATURES.get('DEFAULT_COURSE_LICENSEABLE', False):
-                <li class="field text" id="field-course-license"></li>
+                  <li class="field text" id="field-course-license"></li>
                 % endif
               </ol>
 
@@ -152,11 +152,6 @@
                     <span class="course-run metadata-item">
                       <span class="label">${_("Course Run:")}</span> <span class="value">${course_info['run']}</span>
                     </span>
-                    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course_info['license'] is not UNDEFINED and course_info['license'] is not None:
-                    <span class="course-license metadata-item">
-                      <span class="label">${_("Course License:")}</span> <span class="value">${course_info['license'].small_img}</span>
-                    </span>
-                    % endif
                   </div>
                 </div>
 
@@ -199,11 +194,6 @@
                     <span class="course-run metadata-item">
                       <span class="label">${_("Course Run:")}</span> <span class="value">${course_info['run']}</span>
                     </span>
-                    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course_info['license'] is not UNDEFINED and course_info['license'] is not None:
-                    <span class="course-license metadata-item">
-                      <span class="label">${_("Course License:")}</span> <span class="value">${course_info['license'].small_img}</span>
-                    </span>
-                    % endif
                   </div>
                 </div>
 
@@ -254,11 +244,6 @@
                 <span class="course-run metadata-item">
                   <span class="label">${_("Course Run:")}</span> <span class="value">${course_info['run']}</span>
                 </span>
-                % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and course_info['license'] is not UNDEFINED and course_info['license'] is not None:
-                <span class="course-license metadata-item">
-                  <span class="label">${_("Course License:")}</span> <span class="value">${course_info['license'].small_img}</span>
-                </span>
-                % endif
               </div>
             </a>
 

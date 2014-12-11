@@ -60,20 +60,6 @@ class License(JSONField):
         return img
 
     @property
-    def small_img(self):
-        """
-        Alias for `img(big=False)`
-        """
-        return self.img(big=False)
-
-    @property
-    def large_img(self):
-        """
-        Alias for `img(big=True)`
-        """
-        return self.img(big=True)
-
-    @property
     def html(self):
         """
         Return a piece of html that describes the license
@@ -128,22 +114,13 @@ class ARRLicense(License):
         super(ARRLicense, self).__init__(license, version, *args, **kwargs)
 
     @property
-    def img_url(self):
-        """
-        Return the image base url for an 'All rights Reserved'
-        """
-        return settings.STATIC_URL + "images/arr/"
-
-    @property
     def html(self):
         """
         Return a piece of html that descripts the license
         """
-        phrase = _("All rights are reserved for this work.")
-
-        return "<p>{phrase}<br/>{img}</p>".format(
-            phrase=phrase,
-            img=self.img(big=True)
+        phrase = _("All rights reserved")
+        return "<div class='xmodule_licensable'><span class='license-icon license-arr'></span><span class='license-text'>{phrase}</span></div>".format(
+            phrase=phrase
         )
 
 
@@ -190,12 +167,35 @@ class CCLicense(License):
         Return a piece of html that describes the license
         """
 
-        html = "<p>{description}<br />{image}</p>".format(
-            description=self.description,
-            image=self.large_img
-        )
+        licenseHtml = []
+        licenseLink = []
+        licenseText = []
+        if 'BY' in self.license:
+            licenseHtml.append("<span class='license-icon license-cc-by'></span>")
+            licenseLink.append("by")
+            licenseText.append(_("Attribution"))
+        if 'NC' in self.license:
+            licenseHtml.append("<span class='license-icon license-cc-nc'></span>")
+            licenseLink.append("nc")
+            licenseText.append(_("NonCommercial"))
+        if 'SA' in self.license:
+            licenseHtml.append("<span class='license-icon license-cc-sa'></span>")
+            licenseLink.append("sa")
+            licenseText.append(_("ShareAlike"))
+        if 'ND' in self.license:
+            licenseHtml.append("<span class='license-icon license-cc-nd'></span>")
+            licenseLink.append("nd")
+            licenseText.append(_("NonDerivatives"))
 
-        return html
+        phrase = _("Some rights reserved")
+        return "<a rel='license' href='http://creativecommons.org/licenses/{licenseLink}/{version}/' data-tooltip='{description}' target='_blank' class='license'>{licenseHtml}<span class='license-text'>{phrase}</span></a>".format(
+            description=self.description,
+            version=self.version,
+            licenseLink='-'.join(licenseLink),
+            licenseText='-'.join(licenseText),
+            licenseHtml=''.join(licenseHtml),
+            phrase=phrase
+        )
 
     @property
     def description(self):

@@ -468,6 +468,7 @@ def course_index(request, course_key):
             ),
             'rerun_notification_id': current_action.id if current_action else None,
             'course_release_date': course_release_date,
+            'license': course_module.license,
             'settings_url': settings_url,
             'notification_dismiss_url': reverse_course_url(
                 'course_notifications_handler',

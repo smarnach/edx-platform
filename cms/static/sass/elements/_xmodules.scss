@@ -28,11 +28,53 @@
   }
   
   .license {
-    text-align: center;
-    font-size: 11px;
+    text-align: right;
     
     p {
       display: inline;
+    }
+  }
+}
+
+.xmodule_licensable {
+  clear: both;
+  padding: 5px 0;
+  opacity: .3;
+  @include transition(opacity .25s ease-in-out);
+  &.opaque, &:hover {
+    opacity: 1;
+  }
+  a.license {
+    font-size: 15px;
+    color: $black;
+    .license-icon {
+      background: url("../img/cc/by.png") no-repeat center;
+      background-size: 20px;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin: 2px 2px -4px;
+    }
+    .license-text {
+      margin-left: 10px;
+    }
+    .license-arr {
+      background-image: url(../img/arr/arr.png);
+    }
+    .license-cc0 {
+      background-image: url(../img/cc/zero.png);
+    }
+    .license-cc-by {
+      background-image: url(../img/cc/by.png);
+    }
+    .license-cc-nc {
+      background-image: url(../img/cc/nc.png);
+    }
+    .license-cc-sa {
+      background-image: url(../img/cc/sa.png)
+    }
+    .license-cc-nd {
+      background-image: url(../img/cc/nd.png);
     }
   }
 }

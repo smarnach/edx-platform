@@ -43,7 +43,7 @@ function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, V
                     if (_.isFunction(Metadata[type])) {
                         new Metadata[type](data);
                     } else {
-                       // Everything else is treated as GENERIC_TYPE, which uses String editor.
+                        // Everything else is treated as GENERIC_TYPE, which uses String editor.
                         new Metadata.String(data);
                     }
                 });
@@ -132,8 +132,7 @@ function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, V
             // Render selector
             if (!this.initialized) {
                 this.licenseSelector = new LicenseSelector({
-                    model: this.model.getValue(),
-                    buttonSize: "middle"
+                    model: this.model.getValue()
                 });
             }
             this.$el.find('.wrapper-license-selector').html(this.licenseSelector.render().$el);
