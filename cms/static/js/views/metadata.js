@@ -132,10 +132,11 @@ function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, V
             // Render selector
             if (!this.initialized) {
                 this.licenseSelector = new LicenseSelector({
-                    model: this.model.getValue()
+                    model: this.model.getValue(),
+                    el: this.$el.find('.wrapper-license-selector')
                 });
             }
-            this.$el.find('.wrapper-license-selector').html(this.licenseSelector.render().$el);
+            this.licenseSelector.render();
         },
 
         getValueFromEditor: function () {

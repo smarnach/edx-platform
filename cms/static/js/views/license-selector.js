@@ -20,10 +20,7 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                 
                 // Rerender on model change
                 this.listenTo(this.model, 'change', this.render);
-            },
-
-            setLicense: function(newLicense) {
-                this.model.set({'license': newLicense})
+                this.render();
             },
 
             render: function() {
@@ -34,12 +31,12 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
 
                 this.$el.addClass('license-selector');
 
-                this.setLicenseButtons();
+                this.renderLicenseButtons();
 
                 return this;
             },
 
-            setLicenseButtons: function() {
+            renderLicenseButtons: function() {
                 var license, $cc;
                 license = this.model.get('license');
                 $cc = this.$el.find('.selected-cc-license-options');
@@ -64,54 +61,54 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
             renderLicense: function() {
                 var license, licenseHtml, licenseText, licenseLink, licenseTooltip;
                 license = (this.model.get('license') || "none").toLowerCase();
-                
-                switch(license) {
-                    case "none":
-                    case "arr":
-                        // All rights reserved
-                        licenseText = gettext("All rights reserved")
-                        return "<span class='license-icon license-arr'></span><span class='license-text'>" + licenseText + "</span>";
-                    case "cc0":
-                        // Creative commons zero license
-                        licenseText = gettext("No rights reserved")
-                        return "<a rel='license' href='http://creativecommons.org/publicdomain/zero/1.0/' target='_blank'><span class='license-icon license-cc0'></span><span class='license-text'>" + licenseText + "</span></a>";
-                    default:
-                        // Creative commons license
-                        licenseVersion = "4.0";
-                        licenseHtml = "";
-                        licenseLink = [];
-                        licenseText = [];
-                        if(/by/.exec(license)){
-                            licenseHtml += "<span class='license-icon license-cc-by'></span>";
-                            licenseLink.push("by");
-                            licenseText.push(gettext("Attribution"));
-                        }
-                        if(/nc/.exec(license)){
-                            licenseHtml += "<span class='license-icon license-cc-nc'></span>";
-                            licenseLink.push("nc");
-                            licenseText.push(gettext("NonCommercial"));
-                        }
-                        if(/sa/.exec(license)){
-                            licenseHtml += "<span class='license-icon license-cc-sa'></span>";
-                            licenseLink.push("sa");
-                            licenseText.push(gettext("ShareAlike"));
-                        }
-                        if(/nd/.exec(license)){
-                            licenseHtml += "<span class='license-icon license-cc-nd'></span>";
-                            licenseLink.push("nd");
-                            licenseText.push(gettext("NonDerivatives"));
-                        }
-                        licenseTooltip = interpolate(gettext("This work is licensed under a Creative Commons %(license_attributes)s %(version)s International License."), {
-                                license_attributes: licenseText.join("-"),
-                                version: licenseVersion
-                            }, true);
-                        return "<a rel='license' href='http://creativecommons.org/licenses/" +
-                            licenseLink.join("-") + "/" + licenseVersion + "/' data-tooltip='" + licenseTooltip +
-                            "' target='_blank' class='license'>" +
-                            licenseHtml +
-                            "<span class='license-text'>" +
-                            gettext("Some rights reserved") +
-                            "</span></a>";
+
+                if(license == "none" || license == "arr"){
+                    // All rights reserved
+                    licenseText = gettext("All rights reserved")
+                    return "<span class='license-icon license-arr'></span><span class='license-text'>" + licenseText + "</span>";
+                }
+                else if(license == "cc0"){
+                    // Creative commons zero license
+                    licenseText = gettext("No rights reserved")
+                    return "<a rel='license' href='http://creativecommons.org/publicdomain/zero/1.0/' target='_blank'><span class='license-icon license-cc0'></span><span class='license-text'>" + licenseText + "</span></a>";
+                }
+                else {
+                    // Creative commons license
+                    licenseVersion = "4.0";
+                    licenseHtml = "";
+                    licenseLink = [];
+                    licenseText = [];
+                    if(/by/.exec(license)){
+                        licenseHtml += "<span class='license-icon license-cc-by'></span>";
+                        licenseLink.push("by");
+                        licenseText.push(gettext("Attribution"));
+                    }
+                    if(/nc/.exec(license)){
+                        licenseHtml += "<span class='license-icon license-cc-nc'></span>";
+                        licenseLink.push("nc");
+                        licenseText.push(gettext("NonCommercial"));
+                    }
+                    if(/sa/.exec(license)){
+                        licenseHtml += "<span class='license-icon license-cc-sa'></span>";
+                        licenseLink.push("sa");
+                        licenseText.push(gettext("ShareAlike"));
+                    }
+                    if(/nd/.exec(license)){
+                        licenseHtml += "<span class='license-icon license-cc-nd'></span>";
+                        licenseLink.push("nd");
+                        licenseText.push(gettext("NonDerivatives"));
+                    }
+                    licenseTooltip = interpolate(gettext("This work is licensed under a Creative Commons %(license_attributes)s %(version)s International License."), {
+                            license_attributes: licenseText.join("-"),
+                            version: licenseVersion
+                        }, true);
+                    return "<a rel='license' href='http://creativecommons.org/licenses/" +
+                        licenseLink.join("-") + "/" + licenseVersion + "/' data-tooltip='" + licenseTooltip +
+                        "' target='_blank' class='license'>" +
+                        licenseHtml +
+                        "<span class='license-text'>" +
+                        gettext("Some rights reserved") +
+                        "</span></a>";
                 }
             },
 

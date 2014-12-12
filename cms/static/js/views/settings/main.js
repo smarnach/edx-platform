@@ -29,9 +29,8 @@ var DetailsView = ValidatingView.extend({
 
         this.licenseSelector = new LicenseSelector({
             model: this.model.get('license'),
-            imgSize: "big"
+            el: document.getElementById("course-license-form")
         });
-        this.$el.find("#course-license-form").html(this.licenseSelector.render().$el);
 
         this.$el.find('.set-date').datepicker({ 'dateFormat': 'm/d/yy' });
 

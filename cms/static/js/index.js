@@ -89,8 +89,7 @@ define(["domReady", "jquery", "underscore", "js/utils/cancel_on_escape", "js/vie
             $('.action-reload').bind('click', ViewUtils.reload);
 
             // Licencing in new course form
-            var licenseSelector = new LicenseSelector();
-            $('#field-course-license').html(licenseSelector.render().$el);
+            new LicenseSelector({el: document.getElementById("field-course-license")});
         };
 
         domReady(onReady);

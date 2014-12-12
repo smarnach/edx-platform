@@ -118,7 +118,6 @@ var AssetView = BaseView.extend({
         wait: true, // This means we won't re-render until we get back the success state.
         success: function() {
             saving.hide();
-            view.$el.find('.license-holder').html(view.licenseSelector.renderLicense());
             ModalUtils.hideModal(null, ".change-license-modal");
         }
     });
