@@ -26,13 +26,13 @@ define(["backbone"], function(Backbone) {
                 var license, validLicense;
                 license = newattrs.license;
 
-                if (license == "ARR" || license == "CC0") {
+                if (license === "ARR" || license === "CC0") {
                     validLicense = license;
                 }
                 else {
                     var attr = license.split("-");
 
-                    if (attr.length > 1 && attr[0] == "CC" && attr[1] == "BY") {
+                    if (attr.length > 1 && attr[0] === "CC" && attr[1] === "BY") {
                         validLicense = attr.join("-");
                     }
                     else {

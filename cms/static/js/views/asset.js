@@ -4,9 +4,6 @@ var AssetView = BaseView.extend({
   initialize: function() {
     this.template = this.loadTemplate("asset");
     this.listenTo(this.model, "change:locked", this.updateLockState);
-    this.licenseSelector = new LicenseSelector({
-        model: this.model.get('license')
-    });
   },
   tagName: "tr",
   events: {
@@ -23,12 +20,16 @@ var AssetView = BaseView.extend({
       date_added: this.model.get('date_added'),
       url: this.model.get('url'),
       licenseable: this.model.get('licenseable'),
-      license: this.licenseSelector.img(),
       external_url: this.model.get('external_url'),
       portable_url: this.model.get('portable_url'),
       uniqueId: uniqueId
     }));
-    this.licenseSelector.render();
+    if(!this.licenseSelector){
+        this.licenseSelector = new LicenseSelector({
+            model: this.model.get('license'),
+            el: thid.$el.find('.license')
+        });
+    }
     this.updateLockState();
     return this;
   },

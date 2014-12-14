@@ -100,7 +100,7 @@ from contentstore.utils import reverse_usage_url
                       </li>
                     </ul>
                 </div>
-                % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and license is not UNDEFINED:
+                % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and license:
                   <div class="course-license">
                       <h2 class="course-license-label">${_("Course Content License:")}</h2>
                       <div class="xmodule_licensable license">

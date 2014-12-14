@@ -1,6 +1,5 @@
 <%! from django.utils.translation import ugettext as _ %>
 <%! from django.conf import settings %>
-<%! import pudb %>
 
 % if display_name is not UNDEFINED and display_name is not None:
     <h2>${display_name}</h2>
@@ -18,7 +17,7 @@
     data-sources='${sources}'
     data-save-state-url="${ajax_url}"
     data-caption-data-dir="${data_dir}"
-    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and licenseable is not UNDEFINED and license is not UNDEFINED and licenseable:
+    % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and licenseable and license:
         data-license="${license}"
     % endif
     data-show-captions="${show_captions}"
@@ -98,15 +97,15 @@
           <a class="nav-skip sr" id="before-transcript_${id}" href="#after-transcript_${id}">${_('Skip to end of transcript.')}</a>
       </article>
 
+      <ol id="transcript-captions" class="subtitles" tabindex="0" role="group" aria-label="${_('Activating an item in this group will spool the video to the corresponding time point. To skip transcript, go to previous item.')}">
+        <li></li>
+      </ol>
+
       % if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False) and licenseable is not UNDEFINED and license is not UNDEFINED and licenseable:
         <div class="xmodule_licensable license">
           ${license.html}
         </div>
       % endif
-
-      <ol id="transcript-captions" class="subtitles" tabindex="0" role="group" aria-label="${_('Activating an item in this group will spool the video to the corresponding time point. To skip transcript, go to previous item.')}">
-        <li></li>
-      </ol>
     </div>
 
     <a class="nav-skip sr" id="after-transcript_${id}" href="#before-transcript_${id}">${_('Go back to start of transcript.')}</a>

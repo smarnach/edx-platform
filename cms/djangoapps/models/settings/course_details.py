@@ -2,7 +2,6 @@ import re
 import logging
 import datetime
 import json
-import pudb
 from json.encoder import JSONEncoder
 
 from opaque_keys.edx.locations import Location
@@ -120,10 +119,6 @@ class CourseDetails(object):
         # setter expects as input.
         date = Date()
 
-        if 'license' in jsondict:
-            descriptor.license = parse_license(jsondict['license'])
-            dirty = True
-
         if 'start_date' in jsondict:
             converted = date.from_json(jsondict['start_date'])
         else:
@@ -161,6 +156,10 @@ class CourseDetails(object):
 
         if 'course_image_name' in jsondict and jsondict['course_image_name'] != descriptor.course_image:
             descriptor.course_image = jsondict['course_image_name']
+            dirty = True
+
+        if 'license' in jsondict:
+            descriptor.license = parse_license(jsondict['license'])
             dirty = True
 
         if dirty:

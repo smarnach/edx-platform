@@ -237,7 +237,7 @@ def get_course_about_section(course, section_key):
 
 def get_course_license_section(course):
     """
-    This returns the snippet of html to be rendered on the course about page unde the license section,
+    This returns the snippet of html to be rendered on the course about page under the license section,
     given the course.
     """
     html = "<h2>{title}</h2>{content}".format(

@@ -28,7 +28,7 @@
   }
   
   .license {
-    text-align: right;
+    @include text-align(right);
     
     p {
       display: inline;

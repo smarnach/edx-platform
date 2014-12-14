@@ -24,9 +24,8 @@ from xmodule.contentstore.content import StaticContent
 from xmodule.tabs import PDFTextbookTabs
 from xmodule.partitions.partitions import UserPartition
 from xmodule.modulestore import EdxJSONEncoder
-from xmodule.license import License
-
 from xmodule.modulestore.exceptions import ItemNotFoundError, DuplicateCourseError
+from xmodule.license import License
 from opaque_keys import InvalidKeyError
 from opaque_keys.edx.locations import Location
 from opaque_keys.edx.keys import CourseKey

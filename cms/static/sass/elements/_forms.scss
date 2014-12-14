@@ -151,7 +151,6 @@ form {
     @include grey-button;
     @extend %t-action2;
 
-    padding: ($baseline/2) !important;
     display: inline-block;
 
     text-align: center;
@@ -185,7 +184,7 @@ form {
       }
       i.icon-check, i.icon-unchecked {
         vertical-align: top;
-        margin: 3px 15px 0 10px;
+        margin: 3px 15px 0px;
       }
       i.icon-unchecked {
         display: inline-block;
@@ -193,7 +192,7 @@ form {
       i.icon-check {
         color: $blue;
         display: none;
-        margin-right: 13px;
+        @include margin-right(13px);
       }
       i.icon-check.disabled {
         color: $gray;
@@ -224,8 +223,7 @@ form {
   }
 
   .tip {
-    font-size: 1.2rem;
-    line-height: 1.776rem;
+    @extend %t-copy-sub2;
     margin: 6px 0;
   }
   .selected-cc-license-options {

@@ -482,16 +482,18 @@ def _create_item(request):
         if display_name is not None:
             metadata['display_name'] = display_name
 
-        # Check if licensing is enabled and the if the course that contains the item is licenseable
-        course = store.get_course(dest_usage_key.course_key)
-        metadata['license'] = None
-        if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False) and course is not None and course.licenseable:
-            # If we were supplied a license for the item, set it
-            license = request.json.get('license')
-            if license is not None:
-                metadata['license'] = license
-            else: # Otherwise set the course license as the license for the item
-                metadata['license'] = License().to_json(course.license)
+        if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False):
+            # If licensing is enabled, check if the course that contains the item is licenseable
+            course = store.get_course(dest_usage_key.course_key)
+            metadata['license'] = None
+            # Get the metadata, check if the course is licensable
+            if course is not None and course.licenseable:
+                # If we were supplied a license for the item, set it
+                license = request.json.get('license')
+                if license is not None:
+                    metadata['license'] = license
+                else: # Otherwise set the course license as the license for the item
+                    metadata['license'] = License().to_json(course.license)
 
         # TODO need to fix components that are sending definition_data as strings, instead of as dicts
         # For now, migrate them into dicts here.

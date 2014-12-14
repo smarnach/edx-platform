@@ -302,7 +302,7 @@ def parse_license(license, version=None):
     elif isinstance(license, basestring):
         if license == "ARR":
             return ARRLicense(license,version)
-        elif license[0:5] == "CC-BY" or license == "CC0":
+        elif license.startswith("CC-BY") or license == "CC0":
             return CCLicense(license,version)
         else:
             raise ValueError('Invalid license.')

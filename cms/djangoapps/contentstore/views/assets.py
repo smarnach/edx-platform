@@ -131,9 +131,16 @@ def _assets_json(request, course_key):
         if thumbnail_location:
             thumbnail_location = course_key.make_asset_key('thumbnail', thumbnail_location[4])
 
-        _license = asset.get('license', None)
+        license = asset.get('license', None)
         asset_locked = asset.get('locked', False)
-        asset_json.append(_get_asset_json(asset['displayname'], asset['uploadDate'], asset_location, thumbnail_location, asset_locked, _license))
+        asset_json.append(_get_asset_json(
+            asset['displayname'],
+            asset['uploadDate'],
+            asset_location,
+            thumbnail_location,
+            asset_locked,
+            license
+        ))
 
     return JsonResponse({
         'start': start,
@@ -308,17 +315,15 @@ def _update_asset(request, course_key, asset_key):
 
             contentstore().set_attr(asset_key, 'locked', modified_asset['locked'])
 
-            # Does the course actually exist?!? Get anything from it to prove its
-            # existence
-            try:
-                course_module = modulestore().get_course(course_key)
-            except ItemNotFoundError:
-                # no return it as a Bad Request response
-                logging.error("Could not find course: %s", course_key)
-                return HttpResponseBadRequest()
-
-            if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False) and course_module.licenseable:
-                contentstore().set_attr(asset_key, 'license', modified_asset['license'])
+            if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False):
+                # If we enable licensing on the platform, get the course object so we can inspect its license
+                try:
+                    course_module = modulestore().get_course(course_key)
+                except ItemNotFoundError:
+                    logging.error("Could not find course: %s", course_key)
+                    return HttpResponseBadRequest()
+                if course_module.licenseable:
+                    contentstore().set_attr(asset_key, 'license', modified_asset['license'])
 
             # Delete the asset from the cache so we check the lock status the next time it is requested.
             del_cached_content(asset_key)
