@@ -32,7 +32,7 @@ define(["domReady", "jquery", "underscore", "js/utils/cancel_on_escape", "js/vie
             var org = $newCourseForm.find('.new-course-org').val();
             var number = $newCourseForm.find('.new-course-number').val();
             var run = $newCourseForm.find('.new-course-run').val();
-            var license = JSON.parse($newCourseForm.find('.license').val());
+            var license = licenseSelector.model.toJSON();
 
             course_info = {
                 org: org,
@@ -81,6 +81,9 @@ define(["domReady", "jquery", "underscore", "js/utils/cancel_on_escape", "js/vie
             CreateCourseUtils.configureHandlers();
         };
 
+        // Keep track of the license selector in the scope of this file
+        var licenseSelector;
+
         var onReady = function () {
             $('.new-course-button').bind('click', addNewCourse);
             $('.dismiss-button').bind('click', ViewUtils.deleteNotificationHandler(function () {
@@ -89,7 +92,8 @@ define(["domReady", "jquery", "underscore", "js/utils/cancel_on_escape", "js/vie
             $('.action-reload').bind('click', ViewUtils.reload);
 
             // Licencing in new course form
-            new LicenseSelector({el: document.getElementById("field-course-license")});
+            // TODO This should only be added when the license feature is enabled!
+            licenseSelector = new LicenseSelector({el: document.getElementById("field-course-license")});
         };
 
         domReady(onReady);

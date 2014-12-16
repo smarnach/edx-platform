@@ -39,8 +39,11 @@
 .xmodule_licensable {
   clear: both;
   padding: 5px 0;
-  opacity: .3;
+  opacity: .4;
   @include transition(opacity .25s ease-in-out);
+  &, a.license, span.license-text {
+    color: $black;
+  }
   &.opaque, &:hover {
     opacity: 1;
   }
@@ -48,7 +51,7 @@
     font-size: 15px;
     color: $black;
     .license-icon {
-      background: url("../img/cc/by.png") no-repeat center;
+      background: url("../images/cc/by.png") no-repeat center;
       background-size: 20px;
       display: inline-block;
       width: 20px;
@@ -59,22 +62,22 @@
       margin-left: 10px;
     }
     .license-arr {
-      background-image: url(../img/arr/arr.png);
+      background-image: url(../images/arr/arr.png);
     }
     .license-cc0 {
-      background-image: url(../img/cc/zero.png);
+      background-image: url(../images/cc/zero.png);
     }
     .license-cc-by {
-      background-image: url(../img/cc/by.png);
+      background-image: url(../images/cc/by.png);
     }
     .license-cc-nc {
-      background-image: url(../img/cc/nc.png);
+      background-image: url(../images/cc/nc.png);
     }
     .license-cc-sa {
-      background-image: url(../img/cc/sa.png)
+      background-image: url(../images/cc/sa.png)
     }
     .license-cc-nd {
-      background-image: url(../img/cc/nd.png);
+      background-image: url(../images/cc/nd.png);
     }
   }
 }

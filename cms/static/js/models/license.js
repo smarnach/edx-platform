@@ -1,23 +1,11 @@
-define(["backbone"], function(Backbone) {
+define(["backbone", "backbone.associations"], function(Backbone) {
     /**
      * Simple model for an asset.
      */
-    var License = Backbone.Model.extend({
+    var License = Backbone.AssociatedModel.extend({
         defaults: {
-            license: "NONE",
+            license: "ARR",
             version: ""
-        },
-
-        set: function(attributes, options) {
-            if (options) {
-                options.validate = true;
-            }
-            else {
-                options = {
-                    validate: true
-                };
-            }
-            Backbone.Model.prototype.set.call(this, attributes, options);
         },
 
         validate: function(newattrs) {

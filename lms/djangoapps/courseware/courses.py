@@ -240,9 +240,13 @@ def get_course_license_section(course):
     This returns the snippet of html to be rendered on the course about page under the license section,
     given the course.
     """
-    html = "<h2>{title}</h2>{content}".format(
+    content = ""
+    if course.license:
+        content = course.license.html
+
+    html = "<h2>{title}</h2><div class='xmodule_licensable'>{content}</div>".format(
         title=_("License"),
-        content=course.license.html
+        content=content
     )
 
     return html

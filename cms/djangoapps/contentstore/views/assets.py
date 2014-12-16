@@ -123,6 +123,11 @@ def _assets_json(request, course_key):
         assets, total_count = _get_assets_for_page(request, course_key, current_page, requested_page_size, sort)
         end = start + len(assets)
 
+    course_licenseable = False
+    if settings.FEATURES.get("CREATIVE_COMMONS_LICENSING", False):
+        course_module = modulestore().get_course(course_key)
+        course_licenseable = course_module.licenseable
+
     asset_json = []
     for asset in assets:
         asset_location = asset['asset_key']
@@ -131,7 +136,7 @@ def _assets_json(request, course_key):
         if thumbnail_location:
             thumbnail_location = course_key.make_asset_key('thumbnail', thumbnail_location[4])
 
-        license = asset.get('license', None)
+        asset_license = asset.get('license', None)
         asset_locked = asset.get('locked', False)
         asset_json.append(_get_asset_json(
             asset['displayname'],
@@ -139,7 +144,8 @@ def _assets_json(request, course_key):
             asset_location,
             thumbnail_location,
             asset_locked,
-            license
+            asset_license,
+            course_licenseable
         ))
 
     return JsonResponse({
@@ -330,7 +336,7 @@ def _update_asset(request, course_key, asset_key):
             return JsonResponse(modified_asset, status=201)
 
 
-def _get_asset_json(display_name, date, location, thumbnail_location, locked, license=None):
+def _get_asset_json(display_name, date, location, thumbnail_location, locked, asset_license=None, course_licenseable=False):
     """
     Helper method for formatting the asset information to send to client.
     """
@@ -342,8 +348,8 @@ def _get_asset_json(display_name, date, location, thumbnail_location, locked, li
         'date_added': get_default_time_display(date),
         'url': asset_url,
         'external_url': external_url,
-        'license': license,
-        'licenseable': license is not None,
+        'license': asset_license,
+        'licenseable': course_licenseable,
         'portable_url': StaticContent.get_static_path_from_location(location),
         'thumbnail': StaticContent.serialize_asset_key_with_slash(thumbnail_location) if thumbnail_location else None,
         'locked': locked,

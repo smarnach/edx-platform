@@ -17,7 +17,6 @@ var DetailsView = ValidatingView.extend({
         'focus :input' : "inputFocus",
         'blur :input' : "inputUnfocus",
         'click .action-upload-image': "uploadImage",
-        'click .license-button': "updateLicense",
     },
 
     initialize : function() {
@@ -43,7 +42,7 @@ var DetailsView = ValidatingView.extend({
         });
 
         this.listenTo(this.model, 'invalid', this.handleValidationError);
-        this.listenTo(this.model, 'change', this.showNotificationBar);
+        this.listenTo(this.model, 'change nested-change', this.showNotificationBar);
         this.selectorToField = _.invert(this.fieldToSelectorMap);
     },
 
@@ -84,12 +83,6 @@ var DetailsView = ValidatingView.extend({
         'intro_video' : 'course-introduction-video',
         'effort' : "course-effort",
         'course_image_asset_path': 'course-image-url'
-    },
-
-    updateLicense: function(e) {
-        if (!this.model.has('license') || this.licenseSelector.model.get('license') != this.model.get('license').license) {
-            this.model.set('license', this.licenseSelector.model);
-        }
     },
 
     updateTime : function(e) {

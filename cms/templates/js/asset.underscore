@@ -19,11 +19,10 @@
 <td class="embed-col">
     <input type="text" class="embeddable-xml-input" value="<%= external_url %>" readonly>
 </td>
-<td class="embed-col license-col">
 <% if (licenseable) { %>
-    <span class="embeddable-xml-input license-img"><%= license %></span>
-<% } %>
+<td class="embed-col license-col">
 </td>
+<% } %>
 <td class="actions-col">
     <ul class="actions-list">
         <li class="action-item action-delete">

@@ -298,6 +298,10 @@
           padding-left: ($baseline*0.75);
           color: $gray-l2;
 
+          &.license-col {
+            @extend %t-copy-sub2;
+          }
+
           .embeddable-xml-input {
             @include transition(all $tmg-f2 ease-in-out 0s);
             @extend %t-copy-sub2;
@@ -517,6 +521,20 @@
       background: none;
       box-shadow: none;
       color: $blue;
+    }
+  }
+
+  .license-selector {
+    .license-cc-options {
+      li {
+        text-align: left;
+        h4 {
+          width: 20%;
+        }
+        div.explanation {
+          width: 70%;
+        }
+      }
     }
   }
 

@@ -623,16 +623,18 @@ class CourseFields(object):
                               default=False,
                               scope=Scope.settings)
 
-    license = License(display_name=_("License"),
-                      help=_("Select the license for this course. Reserve all rights, some rights or no rights."),
-                      default=None,
-                      scope=Scope.settings
+    license = License(
+        display_name=_("License"),
+        help=_("Select the license for this course. Reserve all rights, some rights or no rights."),
+        default=None,
+        scope=Scope.settings
     )
 
-    licenseable = Boolean(display_name=_("Licenseable"),
-                          help=_("Whether this course and its contents can be licensed using Creative Commons Licensing."),
-                          default=settings.FEATURES.get("DEFAULT_COURSE_LICENSEABLE", False),
-                          scope=Scope.settings
+    licenseable = Boolean(
+        display_name=_("Licenseable"),
+        help=_("Whether this course and its contents can be licensed using Creative Commons Licensing."),
+        default=settings.FEATURES.get("DEFAULT_COURSE_LICENSEABLE", False),
+        scope=Scope.settings
     )
 
     course_survey_name = String(

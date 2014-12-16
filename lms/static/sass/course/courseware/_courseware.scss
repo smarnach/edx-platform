@@ -272,7 +272,7 @@ div.course-wrapper {
   margin-bottom: 30px;
 
   .license {
-    text-align: center;
+    @include text-align(right);
     font-size: 11px;
     
     p {

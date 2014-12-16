@@ -14,9 +14,8 @@ from cStringIO import StringIO
 from lxml import etree
 from django.utils.translation import ugettext as _
 
-from django.conf import settings
-
 from xblock.fields import JSONField
+
 
 class License(JSONField):
     """
@@ -30,34 +29,6 @@ class License(JSONField):
         self.license = license
         self.version = version
         super(JSONField, self).__init__(*args, **kwargs)
-
-    @property
-    def img_url(self):
-        """
-        Stub property for img_url
-        """
-
-        return ""
-
-    def img(self, big=False):
-        """
-        Return a piece of html with a reference to a license image
-        """
-
-        if not self.license:
-            return _("No license.")
-
-        if (big):
-            img_size = "88x31"
-        else:
-            img_size = "80x15"
-
-        img = "<img src='{img_url}/{img_size}.png' />".format(
-            img_url=self.img_url,
-            img_size=img_size
-        )
-
-        return img
 
     @property
     def html(self):
@@ -119,7 +90,7 @@ class ARRLicense(License):
         Return a piece of html that descripts the license
         """
         phrase = _("All rights reserved")
-        return "<div class='xmodule_licensable'><span class='license-icon license-arr'></span><span class='license-text'>{phrase}</span></div>".format(
+        return "<span class='license-icon license-arr'></span><span class='license-text'>{phrase}</span>".format(
             phrase=phrase
         )
 
@@ -138,62 +109,27 @@ class CCLicense(License):
             self.version = license_img.get("href").split("/")[-2]
 
     @property
-    def img_url(self):
-        if self.license == "CC0":
-            license_string = "zero/1.0"
-        else:
-            # The Creative Commons License is stored as a string formatted in the following way: 'CC-BY-SA'. First it is converted to lowercase.
-            # The split and join serve to remove the 'CC-' from the beginning of the license string.
-
-            license = self.license.lower()
-            attrs = license.split("-")
-            attrs = attrs[1:]
-            license = "-".join(attrs)
-
-            license_string = "{license}/{version}/".format(
-                license=license,
-                version=self.version
-            )
-
-        img_url = "http://i.creativecommons.org/l/{license}".format(
-            license=license_string
-        )
-
-        return img_url
-
-    @property
     def html(self):
         """
         Return a piece of html that describes the license
         """
 
-        licenseHtml = []
-        licenseLink = []
-        licenseText = []
+        license_html = []
         if 'BY' in self.license:
-            licenseHtml.append("<span class='license-icon license-cc-by'></span>")
-            licenseLink.append("by")
-            licenseText.append(_("Attribution"))
+            license_html.append("<span class='license-icon license-cc-by'></span>")
         if 'NC' in self.license:
-            licenseHtml.append("<span class='license-icon license-cc-nc'></span>")
-            licenseLink.append("nc")
-            licenseText.append(_("NonCommercial"))
+            license_html.append("<span class='license-icon license-cc-nc'></span>")
         if 'SA' in self.license:
-            licenseHtml.append("<span class='license-icon license-cc-sa'></span>")
-            licenseLink.append("sa")
-            licenseText.append(_("ShareAlike"))
+            license_html.append("<span class='license-icon license-cc-sa'></span>")
         if 'ND' in self.license:
-            licenseHtml.append("<span class='license-icon license-cc-nd'></span>")
-            licenseLink.append("nd")
-            licenseText.append(_("NonDerivatives"))
+            license_html.append("<span class='license-icon license-cc-nd'></span>")
 
         phrase = _("Some rights reserved")
-        return "<a rel='license' href='http://creativecommons.org/licenses/{licenseLink}/{version}/' data-tooltip='{description}' target='_blank' class='license'>{licenseHtml}<span class='license-text'>{phrase}</span></a>".format(
+        return "<a rel='license' href='http://creativecommons.org/licenses/{license_link}/{version}/' data-tooltip='{description}' target='_blank' class='license'>{license_html}<span class='license-text'>{phrase}</span></a>".format(
             description=self.description,
             version=self.version,
-            licenseLink='-'.join(licenseLink),
-            licenseText='-'.join(licenseText),
-            licenseHtml=''.join(licenseHtml),
+            license_link=self.license.lower()[3:],
+            license_html=''.join(license_html),
             phrase=phrase
         )
 
@@ -202,22 +138,20 @@ class CCLicense(License):
         """
         Return a text that describes the license
         """
+        cc_attributes = []
+        if 'BY' in self.license:
+            cc_attributes.append(_("Attribution"))
+        if 'NC' in self.license:
+            cc_attributes.append(_("NonCommercial"))
+        if 'SA' in self.license:
+            cc_attributes.append(_("ShareAlike"))
+        if 'ND' in self.license:
+            cc_attributes.append(_("NonDerivatives"))
 
-        # If the text hasn't been stored already, fetch it using the API
-        if not hasattr(self, 'text'):
-            data = CCLicense.get_cc_api_data(self.license)
-
-            # Change the tag to be a paragraph
-            data.tag = "p"
-
-            # Remove the image from the API response
-            img = data.find(".//a")
-            img.getparent().remove(img)
-
-            # And convert the html to a string
-            self.text = etree.tostring(data, method="html")
-
-        return self.text
+        return _("This work is licensed under a Creative Commons {attributes} {version} International License.").format(
+            attributes='-'.join(cc_attributes),
+            version=self.version
+        )
 
     @staticmethod
     def cc_attributes_from_license(license):
@@ -241,12 +175,12 @@ class CCLicense(License):
             attrs = iter(license.split("-")[1:])
 
             # Then iterate over the remaining attributes that are set
-            for s in attrs:
-                if s == "SA":
+            for attr in attrs:
+                if attr == "SA":
                     derivatives = "sa"
-                elif s == "NC":
+                elif attr == "NC":
                     commercial = "n"
-                elif s == "ND":
+                elif attr == "ND":
                     derivatives = "n"
 
         return (license_class, commercial, derivatives)
@@ -256,7 +190,7 @@ class CCLicense(License):
         """
         Fetch data about a CC license using the API at creativecommons.org
         """
-        (license_class,commercial,derivatives) = CCLicense.cc_attributes_from_license(license)
+        (license_class, commercial, derivatives) = CCLicense.cc_attributes_from_license(license)
 
         # Format the url for the particular license
         url = "http://api.creativecommons.org/rest/1.5/license/{license_class}/get?commercial={commercial}&derivatives={derivatives}".format(
@@ -286,6 +220,7 @@ class CCLicense(License):
 
         return data
 
+
 def parse_license(license, version=None):
     """
     Return a license object appropriate to the license
@@ -301,9 +236,9 @@ def parse_license(license, version=None):
         return None
     elif isinstance(license, basestring):
         if license == "ARR":
-            return ARRLicense(license,version)
+            return ARRLicense(license, version)
         elif license.startswith("CC-BY") or license == "CC0":
-            return CCLicense(license,version)
+            return CCLicense(license, version)
         else:
             raise ValueError('Invalid license.')
     elif isinstance(license, dict):
@@ -312,4 +247,3 @@ def parse_license(license, version=None):
         return license
     else:
         raise ValueError('Invalid license.')
-

@@ -489,10 +489,11 @@ def _create_item(request):
             # Get the metadata, check if the course is licensable
             if course is not None and course.licenseable:
                 # If we were supplied a license for the item, set it
-                license = request.json.get('license')
-                if license is not None:
-                    metadata['license'] = license
-                else: # Otherwise set the course license as the license for the item
+                request_license = request.json.get('license')
+                if request_license is not None:
+                    metadata['license'] = request_license
+                else:
+                    # Otherwise set the course license as the license for the item
                     metadata['license'] = License().to_json(course.license)
 
         # TODO need to fix components that are sending definition_data as strings, instead of as dicts

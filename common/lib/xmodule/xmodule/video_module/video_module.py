@@ -237,9 +237,10 @@ class VideoModule(VideoFields, VideoTranscriptsMixin, VideoStudentViewHandlers, 
             course = self.runtime.modulestore.get_course(course_id)
 
         licenseable = False
-        license = self.license
+        video_license = None
         if settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False):
-            if license is not None:
+            video_license = self.license
+            if video_license is not None:
                 licenseable = True
             elif course is not None:
                 licenseable = course.licenseable
@@ -276,7 +277,7 @@ class VideoModule(VideoFields, VideoTranscriptsMixin, VideoStudentViewHandlers, 
             'transcript_translation_url': self.runtime.handler_url(self, 'transcript', 'translation').rstrip('/?'),
             'transcript_available_translations_url': self.runtime.handler_url(self, 'transcript', 'available_translations').rstrip('/?'),
             'licenseable': licenseable,
-            'license': license,
+            'license': video_license,
         })
 
 
@@ -462,8 +463,8 @@ class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandler
         }
 
         if hasattr(settings, 'FEATURES') and settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False):
-            attrs['license'] = self.license
-            attrs['license_version'] = self.license_version
+            attrs['license'] = self.license.license
+            attrs['license_version'] = self.license.version
 
         for key, value in attrs.items():
             # Mild workaround to ensure that tests pass -- if a field
@@ -593,9 +594,7 @@ class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandler
         }
 
         if hasattr(settings, 'FEATURES') and settings.FEATURES.get('CREATIVE_COMMONS_LICENSING', False):
-            license = xml.get('license')
-            if license is not None:
-                field_data['license_version'] = parse_license(license).version
+            field_data['license'] = xml.get('license')
 
         sources = xml.findall('source')
         if sources:

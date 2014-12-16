@@ -4,9 +4,10 @@ define(
         "js/models/uploads", "js/views/uploads",
         "js/views/video/transcripts/metadata_videolist",
         "js/views/video/translations_editor",
-        "js/views/license-selector"
+        "js/views/license-selector",
+        "js/models/license"
     ],
-function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, VideoList, VideoTranslations, LicenseSelector) {
+function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, VideoList, VideoTranslations, LicenseSelector, LicenseModel) {
     var Metadata = {};
 
     Metadata.Editor = BaseView.extend({
@@ -132,20 +133,19 @@ function(BaseView, _, MetadataModel, AbstractEditor, FileUpload, UploadDialog, V
             // Render selector
             if (!this.initialized) {
                 this.licenseSelector = new LicenseSelector({
-                    model: this.model.getValue(),
+                    model: new LicenseModel(this.model.getValue()),
                     el: this.$el.find('.wrapper-license-selector')
                 });
             }
-            this.licenseSelector.render();
         },
 
         getValueFromEditor: function () {
-            return this.licenseSelector.model;
+            return this.licenseSelector.model.toJSON();
         },
 
         setValueInEditor: function (value) {
             if (this.initialized) {
-                this.licenseSelector.model.set(value);          
+                this.licenseSelector.model.set('license', value);
             }
         }
     });
