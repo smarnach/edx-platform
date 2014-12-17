@@ -28,36 +28,36 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license"],
                 if(license === "NONE" || license === "ARR"){
                     // All rights reserved
                     licenseText = gettext("All rights reserved")
-                    return "<span class='license-icon license-arr'></span><span class='license-text'>" + licenseText + "</span>";
+                    return "&copy;<span class='license-text'>" + licenseText + "</span>";
                 }
                 else if(license === "CC0"){
                     // Creative commons zero license
                     licenseText = gettext("No rights reserved")
-                    return "<a rel='license' href='http://creativecommons.org/publicdomain/zero/1.0/' target='_blank'><span class='license-icon license-cc0'></span><span class='license-text'>" + licenseText + "</span></a>";
+                    return "<a rel='license' href='http://creativecommons.org/publicdomain/zero/1.0/' target='_blank'><i class='icon-cc'></i><i class='icon-cc-zero'></i><span class='license-text'>" + licenseText + "</span></a>";
                 }
                 else {
                     // Creative commons license
                     licenseVersion = "4.0";
-                    licenseHtml = "";
+                    licenseHtml = "<i class='icon-cc'></i>";
                     licenseLink = [];
                     licenseText = [];
                     if(/BY/.exec(license)){
-                        licenseHtml += "<span class='license-icon license-cc-by'></span>";
+                        licenseHtml += "<i class='icon-cc-by'></i>";
                         licenseLink.push("by");
                         licenseText.push(gettext("Attribution"));
                     }
                     if(/NC/.exec(license)){
-                        licenseHtml += "<span class='license-icon license-cc-nc'></span>";
+                        licenseHtml += "<i class='icon-cc-nc'></i>";
                         licenseLink.push("nc");
                         licenseText.push(gettext("NonCommercial"));
                     }
                     if(/SA/.exec(license)){
-                        licenseHtml += "<span class='license-icon license-cc-sa'></span>";
+                        licenseHtml += "<i class='icon-cc-sa'></i>";
                         licenseLink.push("sa");
                         licenseText.push(gettext("ShareAlike"));
                     }
                     if(/ND/.exec(license)){
-                        licenseHtml += "<span class='license-icon license-cc-nd'></span>";
+                        licenseHtml += "<i class='icon-cc-nd'></i>";
                         licenseLink.push("nd");
                         licenseText.push(gettext("NonDerivatives"));
                     }

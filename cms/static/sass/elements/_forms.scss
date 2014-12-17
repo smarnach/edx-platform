@@ -160,62 +160,55 @@ form {
 
     cursor: pointer;
 
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
     &.selected {
       @include blue-button;
     }
   }
   .license-cc-options {
-    li {
+    .license-button {
       line-height: 1.5;
       border-bottom: 1px solid #EEE;
-      padding: 10px 0 8px;
+      padding: ($baseline / 2) 0 ($baseline * 0.4);
       &.clickable {
         cursor: pointer;
       }
       &.last {
         border-bottom: none;
       }
-      i.icon-check, i.icon-unchecked {
+      .icon-check, .icon-unchecked {
         vertical-align: top;
-        margin: 3px 15px 0px;
+        margin: ($baseline * 0.15) 15px 0px;
       }
-      i.icon-unchecked {
+      .icon-unchecked {
         display: inline-block;
       }
-      i.icon-check {
+      .icon-check {
         color: $blue;
         display: none;
         @include margin-right(13px);
       }
-      i.icon-check.disabled {
+      .icon-check.disabled {
         color: $gray;
       }
       &.selected {
-        i.icon-check {
+        .icon-check {
           display: inline-block;
         }
-        i.icon-unchecked {
+        .icon-unchecked {
           display: none;
         }
       }
-      h4 {
+      .option-name {
+        @extend %t-action3;
+        @extend %t-strong;
         display: inline-block;
         width: 15%;
-        font-size: 13px;
-        font-weight: bold;
         vertical-align: top;
       }
-      div.explanation {
+      .explanation {
+        @extend %t-action4;
         display: inline-block;
         width: 75%;
-        font-size: 11px;
         vertical-align: top;
         color: $gray;
       }
@@ -227,11 +220,11 @@ form {
     margin: 6px 0;
   }
   .selected-cc-license-options {
-    margin: 10px 0 0;
+    margin: ($baseline / 2) 0 0;
   }
   .selected-cc-license-options, .selected-license-text {
     border-top: 1px solid $gray-l5;
-    padding: 10px 0;
+    padding: ($baseline / 2) 0;
   }
   .selected-license {
     display: inline-block;

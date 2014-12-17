@@ -15,7 +15,7 @@
   <ul class="license-cc-options">
     <li class="action-item license-button selected" data-license="BY">
       <i class="icon-check disabled"></i>
-      <h4><%= gettext('Attribution') %></h4>
+      <h4 class='option-name'><%= gettext('Attribution') %></h4>
       <div class="explanation">
         <%= gettext('Allow others to copy, distribute, display and perform your copyrighted work but only if they give credit the way you request. This is enabled for all Creative Commons licenses on edX.') %>
       </div>
@@ -24,7 +24,7 @@
     <li class="action-item license-button clickable" data-license="NC">
       <i class="icon-check"></i>
       <i class="icon-unchecked"></i>
-      <h4><%= gettext('Noncommercial') %></h4>
+      <h4 class='option-name'><%= gettext('Noncommercial') %></h4>
       <div class="explanation">
         <%= gettext('Allow others to distribute, display and perform your work - and derivative works based upon it - but for noncommercial purposes only.') %>
       </div>
@@ -33,7 +33,7 @@
     <li class="action-item license-button clickable" data-license="ND">
       <i class="icon-check"></i>
       <i class="icon-unchecked"></i>
-      <h4><%= gettext('No Derivatives') %></h4>
+      <h4 class='option-name'><%= gettext('No Derivatives') %></h4>
       <div class="explanation">
         <%= gettext('Allow others to copy, distribute, display and perform only verbatim copies of your work, not derivative works based upon it.') %>
       </div>
@@ -42,7 +42,7 @@
     <li class="action-item license-button clickable last" data-license="SA">
       <i class="icon-check"></i>
       <i class="icon-unchecked"></i>
-      <h4><%= gettext('Share Alike') %></h4>
+      <h4 class='option-name'><%= gettext('Share Alike') %></h4>
       <div class="explanation">
         <%= gettext('Allow others to distribute derivative works only under a license identical to the license that governs your work.') %>
       </div>

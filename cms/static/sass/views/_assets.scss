@@ -300,6 +300,12 @@
 
           &.license-col {
             @extend %t-copy-sub2;
+            .license {
+              color: $gray-l2;
+            }
+            .license-text {
+              @include margin-left(5px);
+            }
           }
 
           .embeddable-xml-input {
@@ -494,13 +500,13 @@
 
 .change-license-modal {
   display: none;
-  width: 640px !important;
-  @include margin-left(-320px !important);
+  width: 640px;
+  @include margin-left(-320px);
   height: auto;
 
   .modal-body {
-    height: auto !important;
-    overflow-y: auto !important;
+    height: auto;
+    overflow-y: auto;
     text-align: center;
   }
  
@@ -513,7 +519,7 @@
     background: none;
     padding: 0;
 
-    i.icon-remove, i.icon-remove-sign {
+    .icon-remove, .icon-remove-sign {
       @extend %t-action1;
     }
 
@@ -526,12 +532,12 @@
 
   .license-selector {
     .license-cc-options {
-      li {
-        text-align: left;
-        h4 {
+      .license-button {
+        @include text-align(left);
+        .option-name {
           width: 20%;
         }
-        div.explanation {
+        .explanation {
           width: 70%;
         }
       }
@@ -540,7 +546,8 @@
 
   .save-license-button {
     @include blue-button;
-    position: absolute;
-    @include right($baseline*0.75);
+    @include float(right);
+    @include margin-right($baseline*0.75);
+    margin-bottom: ($baseline*0.75);
   }
 }

@@ -90,7 +90,7 @@ class ARRLicense(License):
         Return a piece of html that descripts the license
         """
         phrase = _("All rights reserved")
-        return "<span class='license-icon license-arr'></span><span class='license-text'>{phrase}</span>".format(
+        return "&copy;<span class='license-text'>{phrase}</span>".format(
             phrase=phrase
         )
 
@@ -114,15 +114,17 @@ class CCLicense(License):
         Return a piece of html that describes the license
         """
 
-        license_html = []
+        license_html = ["<i class='icon-cc'></i>"]
+        if 'CC0' in self.license:
+            license_html.append("<i class='icon-cc-zero'></i>")
         if 'BY' in self.license:
-            license_html.append("<span class='license-icon license-cc-by'></span>")
+            license_html.append("<i class='icon-cc-by'></i>")
         if 'NC' in self.license:
-            license_html.append("<span class='license-icon license-cc-nc'></span>")
+            license_html.append("<i class='icon-cc-nc'></i>")
         if 'SA' in self.license:
-            license_html.append("<span class='license-icon license-cc-sa'></span>")
+            license_html.append("<i class='icon-cc-sa'></i>")
         if 'ND' in self.license:
-            license_html.append("<span class='license-icon license-cc-nd'></span>")
+            license_html.append("<i class='icon-cc-nd'></i>")
 
         phrase = _("Some rights reserved")
         return "<a rel='license' href='http://creativecommons.org/licenses/{license_link}/{version}/' data-tooltip='{description}' target='_blank' class='license'>{license_html}<span class='license-text'>{phrase}</span></a>".format(

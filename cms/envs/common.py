@@ -371,6 +371,8 @@ PIPELINE_CSS = {
     'style-app': {
         'source_filenames': [
             'sass/style-app.css',
+            'css/edx-cc.css',
+            'css/edx-cc-ie7.css',
         ],
         'output_filename': 'css/cms-style-app.css',
     },
