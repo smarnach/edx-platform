@@ -27,6 +27,7 @@ var edx = edx || {};
             this.addCohortFormTemplate = _.template($('#add-cohort-form-tpl').text());
             this.advanced_settings_url = options.advanced_settings_url;
             this.upload_cohorts_csv_url = options.upload_cohorts_csv_url;
+            this.contentGroups = options.contentGroups;
             model.on('sync', this.onSync, this);
 
             // Update cohort counts when the user clicks back on the membership tab
@@ -99,6 +100,7 @@ var edx = edx || {};
                     el: this.$('.cohort-management-group'),
                     model: cohort,
                     cohorts: this.model,
+                    contentGroups: this.contentGroups,
                     advanced_settings_url: this.advanced_settings_url
                 });
                 this.editor.render();

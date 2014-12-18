@@ -64,6 +64,7 @@
             'js/views/file_uploader': 'js/views/file_uploader',
             'js/views/notification': 'js/views/notification',
             'js/groups/models/cohort': 'js/groups/models/cohort',
+            'js/groups/models/content_group': 'js/groups/models/content_group',
             'js/groups/collections/cohort': 'js/groups/collections/cohort',
             'js/groups/views/cohort_editor': 'js/groups/views/cohort_editor',
             'js/groups/views/cohorts': 'js/groups/views/cohorts',
@@ -271,6 +272,10 @@
             // Backbone classes loaded explicitly until they are converted to use RequireJS
             'js/groups/models/cohort': {
                 exports: 'edx.groups.CohortModel',
+                deps: ['backbone']
+            },
+            'js/groups/models/content_group': {
+                exports: 'edx.groups.ContentGroupModel',
                 deps: ['backbone']
             },
             'js/groups/collections/cohort': {

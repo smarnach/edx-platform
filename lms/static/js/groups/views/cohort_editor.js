@@ -7,12 +7,16 @@ var edx = edx || {};
 
     edx.groups.CohortEditorView = Backbone.View.extend({
         events : {
-            "submit .cohort-management-group-add-form": "addStudents"
+            'click .wrapper-tabs .tab': 'selectTab',
+            'click .cohort-management-details-form .action-save': 'saveSettings',
+            'click .cohort-management-details-form .action-cancel': 'cancelSettings',
+            'submit .cohort-management-group-add-form': 'addStudents'
         },
 
         initialize: function(options) {
             this.template = _.template($('#cohort-editor-tpl').text());
             this.cohorts = options.cohorts;
+            this.contentGroups = options.contentGroups;
             this.advanced_settings_url = options.advanced_settings_url;
         },
 
@@ -24,9 +28,30 @@ var edx = edx || {};
         render: function() {
             this.$el.html(this.template({
                 cohort: this.model,
+                contentGroups: this.contentGroups,
                 advanced_settings_url: this.advanced_settings_url
             }));
             return this;
+        },
+
+        selectTab: function(event) {
+            var tabElement = $(event.currentTarget),
+                tabName = tabElement.data('tab');
+            event.preventDefault();
+            this.$('.wrapper-tabs .tab').removeClass('is-selected');
+            tabElement.addClass('is-selected');
+            this.$('.tab-content').addClass('is-hidden');
+            this.$('.tab-content-' + tabName).removeClass('is-hidden');
+        },
+
+        saveSettings: function(event) {
+            event.preventDefault();
+            window.alert('Save not yet implemented!');
+        },
+
+        cancelSettings: function(event) {
+            event.preventDefault();
+            window.alert('Cancel not yet implemented!');
         },
 
         setCohort: function(cohort) {
