@@ -18,7 +18,7 @@ define(["js/views/baseview", "underscore", "gettext", "js/models/license", "js/v
                 this.licenseView = new LicenseView({
                     model: this.model
                 });
-                
+
                 // Rerender on model change
                 this.listenTo(this.model, 'change', this.render);
                 this.render();
