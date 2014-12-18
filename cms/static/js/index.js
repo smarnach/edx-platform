@@ -32,7 +32,12 @@ define(["domReady", "jquery", "underscore", "js/utils/cancel_on_escape", "js/vie
             var org = $newCourseForm.find('.new-course-org').val();
             var number = $newCourseForm.find('.new-course-number').val();
             var run = $newCourseForm.find('.new-course-run').val();
-            var license = licenseSelector.model.toJSON();
+            var license = {};
+            if(licenseSelector){
+                // When the license selector is present (feature flag is set to true)
+                // we will take the value of the selector into account.
+                license = licenseSelector.model.toJSON();
+            }
 
             course_info = {
                 org: org,
@@ -85,15 +90,20 @@ define(["domReady", "jquery", "underscore", "js/utils/cancel_on_escape", "js/vie
         var licenseSelector;
 
         var onReady = function () {
+            var fieldCourseLicense;
             $('.new-course-button').bind('click', addNewCourse);
             $('.dismiss-button').bind('click', ViewUtils.deleteNotificationHandler(function () {
                 ViewUtils.reload();
             }));
             $('.action-reload').bind('click', ViewUtils.reload);
 
-            // Licencing in new course form
-            // TODO This should only be added when the license feature is enabled!
-            licenseSelector = new LicenseSelector({el: document.getElementById("field-course-license")});
+            // When the user is not allowed to set the license on a course, the
+            // field-course-license element will not be found.
+            fieldCourseLicense = document.getElementById("field-course-license");
+            if(fieldCourseLicense){
+                // Licencing in new course form
+                licenseSelector = new LicenseSelector({el: fieldCourseLicense});
+            }
         };
 
         domReady(onReady);
