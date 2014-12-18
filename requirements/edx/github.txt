@@ -19,6 +19,7 @@
 -e git+https://github.com/jazkarta/edx-jsme.git@c5bfa5d361d6685d8c643838fc0055c25f8b7999#egg=edx-jsme
 -e git+https://github.com/pmitros/django-pyfs.git@d175715e0fe3367ec0f1ee429c242d603f6e8b10#egg=djpyfs
 git+https://github.com/mitocw/django-cas.git@60a5b8e5a62e63e0d5d224a87f0b489201a0c695#egg=django-cas
+-e git+https://github.com/doctoryes/code_block_timer.git@e4d9750bc5e2e30f58ddfc6784d28c2452460f63#egg=code_block_timer
 
 # Our libraries:
 -e git+https://github.com/edx/XBlock.git@9c634481dfc85a17dcb3351ca232d7098a38e10e#egg=XBlock

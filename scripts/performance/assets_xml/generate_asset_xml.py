@@ -1,0 +1,180 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import json
+import pytz
+import random
+import lxml
+import os
+from optparse import OptionParser
+from datetime import datetime, timedelta
+#from asset_md import AssetMetadata, AssetKey
+from xmodule.assetstore import AssetMetadata
+from opaque_keys.edx.keys import CourseKey, AssetKey
+
+
+ASSET_XML_FILE = 'assets.xml'
+ASSET_XSD_FILE = 'assets.xsd'
+
+INDENT_SPACES = 4
+
+
+class RandomAssetData(object):
+
+    NAME_CHARS = u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-'
+    NAME_CHARS_W_UNICODE = NAME_CHARS + u'àĚŘǅΦШΩΣӔ'
+
+    @staticmethod
+    def coin_flip():
+        return random.choice((True, False))
+
+    @staticmethod
+    def asset_type():
+        ASSET_TYPE_CHOICES = (
+            ( 95, "asset"),
+            (100, "video")
+        )
+        d100 = random.randint(0, 100)
+        for choice in ASSET_TYPE_CHOICES:
+            if d100 <= choice[0]:
+                return choice[1]
+        return ASSET_TYPE_CHOICES[-1][1]
+
+    @staticmethod
+    def filename():
+        filename = u''
+        for i in xrange(0, random.randint(10,30)):
+            filename += random.choice(RandomAssetData.NAME_CHARS_W_UNICODE)
+        filename += random.choice(('.jpg', '.pdf', '.png', '.txt'))
+        return filename
+
+    @staticmethod
+    def pathname():
+        pathname = u''
+        for i in xrange(0, random.randint(2,3)):
+            for j in xrange(0, random.randint(5,10)):
+                pathname += random.choice(RandomAssetData.NAME_CHARS)
+            pathname += '/'
+        return pathname
+
+    @staticmethod
+    def locked():
+        return RandomAssetData.coin_flip()
+
+    @staticmethod
+    def fields():
+        f = {}
+        if RandomAssetData.coin_flip():
+            if RandomAssetData.coin_flip():
+                f['copyrighted'] = RandomAssetData.coin_flip()
+            if RandomAssetData.coin_flip():
+                f['size'] = random.randint(100, 10000000)
+            if RandomAssetData.coin_flip():
+                f['color'] = random.choice(('blue', 'pink', 'fuchsia', 'rose', 'mauve', 'black'))
+        return f
+
+    @staticmethod
+    def user_id():
+        return random.randint(1,100000000)
+
+    @staticmethod
+    def versions():
+        curr_ver = random.randint(1,500)
+        prev_ver = curr_ver - 1
+        def ver_str(ver):
+            return 'v{}.0'.format(ver)
+        return (ver_str(curr_ver), ver_str(prev_ver))
+
+    @staticmethod
+    def datetime():
+        start_date = datetime.now()
+        time_back = timedelta(seconds=random.randint(0, 473040000)) # 15 year interval
+        return start_date - time_back
+
+    @staticmethod
+    def contenttype():
+        return random.choice((
+            'image/jpeg',
+            'text/html',
+            'audio/aiff',
+            'video/avi',
+            'text/plain',
+            'application/msword',
+            'application/x-gzip',
+            'application/javascript',
+        ))
+
+
+def validate_xml(xsd_filename, xml_filename):
+    with open(xsd_filename, 'r') as f:
+        schema_root = lxml.etree.XML(f.read())
+
+    schema = lxml.etree.XMLSchema(schema_root)
+    xmlparser = lxml.etree.XMLParser(schema=schema)
+
+    with open(xml_filename, 'r') as f:
+        lxml.etree.fromstring(f.read(), xmlparser)
+
+
+def generate_random_asset_md():
+    """
+    Generates a single AssetMetadata object with semi-random data.
+    """
+    course_key = CourseKey.from_string('org/course/run')
+    rad = RandomAssetData()
+    asset_key = course_key.make_asset_key(rad.asset_type(), rad.filename())
+    (curr_version, prev_version) = rad.versions()
+    return AssetMetadata(
+        asset_key,
+        pathname=rad.pathname(),
+        internal_name=rad.filename(),
+        locked=rad.locked(),
+        contenttype=rad.contenttype(),
+        thumbnail=rad.filename(),
+        fields=rad.fields(),
+        curr_version=curr_version,
+        prev_version=prev_version,
+        edited_by=rad.user_id(),
+        edited_by_email='staff@edx.org',
+        edited_on=rad.datetime(),
+        created_by=rad.user_id(),
+        created_by_email='staff@edx.org',
+        created_on=rad.datetime(),
+    )
+
+def make_asset_md(amount):
+    all_asset_md = []
+    for i in xrange(0, amount):
+        all_asset_md.append(generate_random_asset_md())
+    return all_asset_md
+
+def make_asset_xml(amount, filename):
+    all_md = make_asset_md(amount)
+    xml_root = lxml.etree.Element("assets")
+    for md in all_md:
+        asset_element = lxml.etree.SubElement(xml_root, "asset")
+        md.to_xml(asset_element)
+    with open(filename, "w") as xml_file:
+        lxml.etree.ElementTree(xml_root).write(xml_file)
+
+
+def main():
+    usage  = "usage: ./generate_asset_xml.py [options]"
+    parser = OptionParser(usage, version="generate_asset_xml 0.1")
+
+    parser.add_option("-n", "--numAssets", type="int", dest="numAssetsToGenerate", default=10,
+                      help="Number of assets to be generated by the script." )
+
+    (options, args) = parser.parse_args()
+
+    if len(args) > 0:
+        parser.error("The argument(s) '%s' are not valid. See the syntax help under -h." % args)
+
+    make_asset_xml(options.numAssetsToGenerate, ASSET_XML_FILE)
+
+    # Now - validate the XML against the XSD.
+    validate_xml(ASSET_XSD_FILE, ASSET_XML_FILE)
+
+
+if __name__ == '__main__':
+    main()
