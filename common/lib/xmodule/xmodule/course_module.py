@@ -633,7 +633,7 @@ class CourseFields(object):
     licenseable = Boolean(
         display_name=_("Licenseable"),
         help=_("Whether this course and its contents can be licensed using Creative Commons Licensing."),
-        default=settings.FEATURES.get("DEFAULT_COURSE_LICENSEABLE", False),
+        default=hasattr(settings, 'FEATURES') and settings.FEATURES.get("DEFAULT_COURSE_LICENSEABLE", False),
         scope=Scope.settings
     )
 
