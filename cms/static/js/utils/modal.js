@@ -4,7 +4,7 @@ define(["jquery"], function($) {
      * Note though that the class "is-fixed" on the modal cover
      * prevents the closing operation.
      */
-    var hideModal = function(e, selector) {
+    var hideModal = function(e) {
         if (e) {
             e.preventDefault();
         }
@@ -14,7 +14,7 @@ define(["jquery"], function($) {
         // Unit editors (module_edit) do not want the modal cover to hide when users click outside
         // of the editor. Users must press Cancel or Save to exit the editor.
         if (!$modalCover.hasClass("is-fixed")) {
-            getModal(selector).hide();
+            getModal().hide();
             hideModalCover($modalCover);
         }
     };
@@ -37,8 +37,8 @@ define(["jquery"], function($) {
     /**
      * Shows the modal and modal cover, using the standard selectors.
      */
-    var showModal = function (selector) {
-        getModal(selector).show();
+    var showModal = function () {
+        getModal().show();
         showModalCover();
     };
 
@@ -70,13 +70,8 @@ define(["jquery"], function($) {
         return $('.modal-cover');
     };
 
-    var getModal = function (selector) {
-        if (selector) {
-            return $(".modal" + selector + ", .showAsModal" + selector);
-        }
-        else {
-            return $(".modal, .showAsModal");
-        }
+    var getModal = function () {
+        return $(".modal, .showAsModal");
     };
 
     return {

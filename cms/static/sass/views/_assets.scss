@@ -298,16 +298,6 @@
           padding-left: ($baseline*0.75);
           color: $gray-l2;
 
-          &.license-col {
-            @extend %t-copy-sub2;
-            .license {
-              color: $gray-l2;
-            }
-            .license-text {
-              @include margin-left(5px);
-            }
-          }
-
           .embeddable-xml-input {
             @include transition(all $tmg-f2 ease-in-out 0s);
             @extend %t-copy-sub2;
@@ -495,59 +485,5 @@
       display: none;
       margin-bottom: ($baseline*5);
     }
-  }
-}
-
-.change-license-modal {
-  display: none;
-  width: 640px;
-  @include margin-left(-320px);
-  height: auto;
-
-  .modal-body {
-    height: auto;
-    overflow-y: auto;
-    text-align: center;
-  }
-
-  .close-button {
-    @include transition(color $tmg-f2 ease-in-out 0s);
-    position: absolute;
-    top: 0;
-    @include right($baseline*0.75);
-    border: none;
-    background: none;
-    padding: 0;
-
-    .icon-remove, .icon-remove-sign {
-      @extend %t-action1;
-    }
-
-    &:hover {
-      background: none;
-      box-shadow: none;
-      color: $blue;
-    }
-  }
-
-  .license-selector {
-    .license-cc-options {
-      .license-button {
-        @include text-align(left);
-        .option-name {
-          width: 20%;
-        }
-        .explanation {
-          width: 70%;
-        }
-      }
-    }
-  }
-
-  .save-license-button {
-    @include blue-button;
-    @include float(right);
-    @include margin-right($baseline*0.75);
-    margin-bottom: ($baseline*0.75);
   }
 }
