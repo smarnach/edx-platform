@@ -666,6 +666,7 @@ div.video {
     }
 
     ol.subtitles.html5 {
+        @extend %ui-depth0;
         background-color: rgba(243, 243, 243, 0.8);
         height: 100%;
         position: absolute;
@@ -674,12 +675,12 @@ div.video {
         top: 0;
         width: 275px;
         padding: 0 $baseline;
-        z-index: 0;
         display: none;
     }
   }
 
   &.video-fullscreen {
+    @extend %ui-depth4;
     background: rgba(#000, .95);
     border: 0;
     bottom: 0;
@@ -690,7 +691,6 @@ div.video {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 9999;
     vertical-align: middle;
     border-radius: 0;
 
@@ -737,11 +737,11 @@ div.video {
       }
 
       section.video-controls {
+        @extend %ui-depth4;
         bottom: 0;
         left: 0;
         position: absolute;
-        width: 100%;
-        z-index: 9999;
+        width: 100%; 
       }
     }
 

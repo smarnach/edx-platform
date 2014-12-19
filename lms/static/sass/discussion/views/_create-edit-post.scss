@@ -208,10 +208,10 @@
 
   .topic-menu-wrapper {
     @include box-sizing(border-box);
+    @extend %ui-depth4;
     position: absolute;
     top: 40px;
     left: 0;
-    z-index: 9999;
     border: 1px solid $gray-l3;
     width: 100%;
     background: $white;
