@@ -1,10 +1,11 @@
 
-import os
-import os.path
+from path import path
+import unittest
 from tempfile import mkdtemp
-from generate_asset_xml import make_asset_xml
+import ddt
+import itertools
+from shutil import rmtree
 
-from code_block_timer import CodeBlockTimer
 from xmodule.assetstore import AssetMetadata
 from xmodule.modulestore.xml_importer import import_from_xml
 from xmodule.modulestore.xml_exporter import export_to_xml
@@ -17,6 +18,8 @@ from xmodule.modulestore.tests.test_cross_modulestore_import_export import (
     XmlModulestoreBuilder,
     MixedModulestoreBuilder
 )
+from code_block_timer import CodeBlockTimer
+from generate_asset_xml import make_asset_xml, validate_xml, ASSET_XSD_FILE
 
 # Number of assets saved in the modulestore per test run.
 ASSET_AMOUNT_PER_TEST = (1, 10, 100, 1000, 10000)
@@ -24,57 +27,67 @@ ASSET_AMOUNT_PER_TEST = (1, 10, 100, 1000, 10000)
 # Use only this course in asset metadata performance testing.
 COURSE_NAME = 'manual-testing-complete'
 
+# A list of courses to test - only one.
+TEST_COURSE = (COURSE_NAME, )
+
+TEST_DIR = path(__file__).dirname()
+PLATFORM_ROOT = TEST_DIR.parent.parent.parent.parent.parent.parent
+TEST_DATA_ROOT = PLATFORM_ROOT / TEST_DATA_DIR
+COURSE_DATA_DIR = TEST_DATA_ROOT / COURSE_NAME
+
 # Path where generated asset file is saved.
-ASSET_FILE_LOCATION = os.path.join(
-    os.environ['HOME'],
-    "edx-platform",
-    TEST_DATA_DIR,
-    COURSE_NAME,
-    AssetMetadata.EXPORTED_ASSET_DIR,
-    AssetMetadata.EXPORTED_ASSET_FILENAME
-)
+ASSET_XML_PATH = COURSE_DATA_DIR / AssetMetadata.EXPORTED_ASSET_DIR / AssetMetadata.EXPORTED_ASSET_FILENAME
+
+# Path where asset XML schema definition file is located.
+ASSET_XSD_PATH = PLATFORM_ROOT / "common" / "lib" / "xmodule" / "xmodule" / "assetstore" / "tests" / ASSET_XSD_FILE
 
 
-class CrossStoreXMLRoundtrip(object):
+@ddt.ddt
+class CrossStoreXMLRoundtrip(unittest.TestCase):
     """
     This class exists to time XML import and export between different modulestore
     classes with different amount of asset metadata.
     """
 
-    def __init__(self, source_ms, dest_ms, course, num_assets):
-        #super(CrossStoreXMLRoundtrip, self).setUp()
+    # Use this attribute to skip this test on regular unittest CI runs.
+    perf_test = True
+
+    def setUp(self):
+        super(CrossStoreXMLRoundtrip, self).setUp()
         self.export_dir = mkdtemp()
-        self.source_ms = source_ms
-        self.dest_ms = dest_ms
-        self.course = course
-        self.num_assets = num_assets
-        #self.addCleanup(rmtree, self.export_dir, ignore_errors=True)
+        self.addCleanup(rmtree, self.export_dir, ignore_errors=True)
 
-    def runTest(self):
-        self.generate_asset_xml()
-        self.generate_timing()
-
-    def generate_asset_xml(self):
+    @ddt.data(*itertools.product(
+        MODULESTORE_SETUPS,
+        MODULESTORE_SETUPS,
+        ASSET_AMOUNT_PER_TEST
+    ))
+    @ddt.unpack
+    def test_generate_timings(self, source_ms, dest_ms, num_assets):
         """
-        Generate the test asset XML and put it in the test course to be imported.
+        Generate timings for different amounts of asset metadata and different modulestores.
         """
-        make_asset_xml(self.num_assets, ASSET_FILE_LOCATION)
-
-    def generate_timing(self):
         desc = "XMLRoundTrip:{}->{}:{}".format(
-            SHORT_NAME_MAP[self.source_ms],
-            SHORT_NAME_MAP[self.dest_ms],
-            self.num_assets
+            SHORT_NAME_MAP[source_ms],
+            SHORT_NAME_MAP[dest_ms],
+            num_assets
         )
+
         with CodeBlockTimer(desc) as timer:
+
+            with CodeBlockTimer("fake_assets"):
+                # First, make the fake asset metadata.
+                make_asset_xml(num_assets, ASSET_XML_PATH)
+                validate_xml(ASSET_XSD_PATH, ASSET_XML_PATH)
+
             # Construct the contentstore for storing the first import
             with MongoContentstoreBuilder().build() as source_content:
                 # Construct the modulestore for storing the first import (using the previously created contentstore)
-                with self.source_ms.build(source_content) as source_store:
+                with source_ms.build(source_content) as source_store:
                     # Construct the contentstore for storing the second import
                     with MongoContentstoreBuilder().build() as dest_content:
                         # Construct the modulestore for storing the second import (using the second contentstore)
-                        with self.dest_ms.build(dest_content) as dest_store:
+                        with dest_ms.build(dest_content) as dest_store:
                             source_course_key = source_store.make_course_key('a', 'course', 'course')
                             dest_course_key = dest_store.make_course_key('a', 'course', 'course')
 
@@ -82,8 +95,8 @@ class CrossStoreXMLRoundtrip(object):
                                 import_from_xml(
                                     source_store,
                                     'test_user',
-                                    os.path.join(os.environ['HOME'], "edx-platform", TEST_DATA_DIR),
-                                    course_dirs=[self.course],
+                                    TEST_DATA_ROOT,
+                                    course_dirs=TEST_COURSE,
                                     static_content_store=source_content,
                                     target_course_id=source_course_key,
                                     create_course_if_not_present=True,
@@ -110,21 +123,3 @@ class CrossStoreXMLRoundtrip(object):
                                     create_course_if_not_present=True,
                                     raise_on_failure=True,
                                 )
-
-
-# Run the tests.
-for source_ms in MODULESTORE_SETUPS:
-    for dest_ms in MODULESTORE_SETUPS:
-        for amount in ASSET_AMOUNT_PER_TEST:
-            print "=========================="
-            print "Testing with {}->{} with {} asset metadata items...".format(
-                SHORT_NAME_MAP[source_ms],
-                SHORT_NAME_MAP[dest_ms],
-                amount
-            )
-            print "=========================="
-            tester = CrossStoreXMLRoundtrip(MODULESTORE_SETUPS[0], MODULESTORE_SETUPS[0], COURSE_NAME, amount)
-            tester.runTest()
-
-# Query the test data and generate reports.
-

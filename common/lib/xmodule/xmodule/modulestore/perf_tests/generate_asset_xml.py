@@ -6,9 +6,9 @@ import pytz
 import random
 import lxml
 import os
+from lxml import etree
 from optparse import OptionParser
 from datetime import datetime, timedelta
-#from asset_md import AssetMetadata, AssetKey
 from xmodule.assetstore import AssetMetadata
 from opaque_keys.edx.keys import CourseKey, AssetKey
 
@@ -105,17 +105,6 @@ class RandomAssetData(object):
         ))
 
 
-def validate_xml(xsd_filename, xml_filename):
-    with open(xsd_filename, 'r') as f:
-        schema_root = lxml.etree.XML(f.read())
-
-    schema = lxml.etree.XMLSchema(schema_root)
-    xmlparser = lxml.etree.XMLParser(schema=schema)
-
-    with open(xml_filename, 'r') as f:
-        lxml.etree.fromstring(f.read(), xmlparser)
-
-
 def generate_random_asset_md():
     """
     Generates a single AssetMetadata object with semi-random data.
@@ -156,6 +145,16 @@ def make_asset_xml(amount, filename):
         md.to_xml(asset_element)
     with open(filename, "w") as xml_file:
         lxml.etree.ElementTree(xml_root).write(xml_file)
+
+def validate_xml(xsd_filename, xml_filename):
+    with open(xsd_filename, 'r') as f:
+        schema_root = etree.XML(f.read())
+
+    schema = etree.XMLSchema(schema_root)
+    xmlparser = etree.XMLParser(schema=schema)
+
+    with open(xml_filename, 'r') as f:
+        etree.fromstring(f.read(), xmlparser)
 
 
 def main():
