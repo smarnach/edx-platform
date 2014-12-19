@@ -1,6 +1,6 @@
 var edx = edx || {};
 
-(function($, _, Backbone, gettext, interpolate_text, CohortEditorView,
+(function($, _, Backbone, gettext, interpolate_text, CohortEditorView, CohortFormView,
           NotificationModel, NotificationView, FileUploaderView) {
     'use strict';
 
@@ -24,7 +24,6 @@ var edx = edx || {};
 
             this.template = _.template($('#cohorts-tpl').text());
             this.selectorTemplate = _.template($('#cohort-selector-tpl').text());
-            this.addCohortFormTemplate = _.template($('#add-cohort-form-tpl').text());
             this.advanced_settings_url = options.advanced_settings_url;
             this.upload_cohorts_csv_url = options.upload_cohorts_csv_url;
             this.contentGroups = options.contentGroups;
@@ -129,16 +128,19 @@ var edx = edx || {};
         showAddCohortForm: function(event) {
             event.preventDefault();
             this.removeNotification();
-            this.addCohortForm = $(this.addCohortFormTemplate({}));
-            this.addCohortForm.insertAfter(this.$('.cohort-management-nav'));
+            this.cohortFormView = new CohortFormView({
+                contentGroups: this.contentGroups
+            });
+            this.cohortFormView.render();
+            this.cohortFormView.$el.insertAfter(this.$('.cohort-management-nav'));
             this.setCohortEditorVisibility(false);
         },
 
         hideAddCohortForm: function() {
             this.setCohortEditorVisibility(true);
-            if (this.addCohortForm) {
-                this.addCohortForm.remove();
-                this.addCohortForm = null;
+            if (this.cohortFormView) {
+                this.cohortFormView.remove();
+                this.cohortFormView = null;
             }
         },
 
@@ -236,5 +238,5 @@ var edx = edx || {};
             return ".instructor-nav .nav-item a[data-section='" + section + "']";
         }
     });
-}).call(this, $, _, Backbone, gettext, interpolate_text, edx.groups.CohortEditorView,
+}).call(this, $, _, Backbone, gettext, interpolate_text, edx.groups.CohortEditorView, edx.groups.CohortFormView,
     NotificationModel, NotificationView, FileUploaderView);

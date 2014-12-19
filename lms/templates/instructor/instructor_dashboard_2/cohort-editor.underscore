@@ -29,8 +29,8 @@
     </header>
 
     <ul class="wrapper-tabs">
-        <li class="tab tab-manage_students is-selected" data-tab="manage_students"><a href="#"><%- gettext("Manage Students in Cohort Groups") %></a></li>
-        <li class="tab tab-settings" data-tab="settings"><a href="#"><%- gettext("Cohort Group Settings") %></a></li>
+        <li class="tab tab-manage_students is-selected" data-tab="manage_students"><a href="#"><%- gettext("Manage Students") %></a></li>
+        <li class="tab tab-settings" data-tab="settings"><a href="#"><%- gettext("Settings") %></a></li>
     </ul>
 
     <div class="cohort-management-group-add tab-content tab-content-manage_students">
@@ -68,52 +68,5 @@
     </div>
 
     <div class="cohort-management-details tab-content tab-content-settings is-hidden">
-        <form action="" method="post" name="" id="cohort-management-details-form" class="cohort-management-details-form">
-            <h3 class="form-title sr"><%- gettext("Cohort Group Details") %></h3>
-            <div class="form-fields">
-                <div class="cohort-management-details-name field field-text">
-                    <h4 class="cohort-section-header no-top-margin"><%- gettext("Cohort Group Name:") %></h4>
-                    <label for="cohort-details-name" class="label sr"><%- gettext("Cohort Group Name") %></label>
-                    <input type="text" name="cohort-details-name" value="<%- cohort.get('name') %>" class="input cohort-details-name" id="cohort-details-name" placeholder="<%- gettext("Enter Your Cohort's Name") %>" required />
-                </div>
-            </div>
-
-            <!-- When options are available but a deleted one is selected. -->
-            <h4 class="cohort-section-header divider-lv2"><%- gettext("Is this cohort group associated with course-based content groups?") %></h4>
-            <div class="form-fields">
-                <div class="cohort-management-details-assn-course field field-radio">
-                    <label for="cohort-assn-course-no"><input type="radio" name="cohort-assn-course" value="no" /><%- gettext("No") %></label>
-                    <div class="input-group has-other">
-                        <label for="cohort-assn-course-yes"><input type="radio" name="cohort-assn-course" value="yes" checked="checked" /><%- gettext("Yes") %></label>
-                        <div class="input-group-other is-visible">
-                            <label class="sr" for="cohort-group-assn"><%- gettext("Choose a content group to associate") %></label>
-                            <select name="cohort-group-assn" id="cohort-group-assn" class="input input-lg has-option-unavailable">
-                                <optgroup label="Available content groups">
-                                    <% for (var i=0; i < contentGroups.length; i++) { %>
-                                        <% var contentGroup = contentGroups[i]; %>
-                                        <option data-group-id="<%- contentGroup.get('id') %>"><%- contentGroup.get('name') %></option>
-                                    <% } %>
-                                </optgroup>
-                                <optgroup label="Deleted content groups">
-                                    <option class="option-unavailable" selected="selected"><%- gettext("Some content group that's been deleted") %></option>
-                                    <option class="option-unavailable"><%- gettext("Another deleted content group") %></option>
-                                </optgroup>
-                            </select>
-
-                            <div class="msg error inline">
-                                <p class="copy-error"><i class="icon icon-warning-sign"></i><%- gettext("The selected content group has been deleted, you may wish to reassign this cohort group.") %></p>
-                            </div>
-                            <div class="msg error inline">
-                                <p class="copy-error"><i class="icon icon-warning-sign"></i><%- gettext("You haven't configured any content groups yet. You need to create a content group before you can create assignments.") %><a href="#"><%- gettext("Create a content group") %></a></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="form-submit action-primary action-save">Save</button>
-                <button type="button" class="button-link action-secondary action-cancel">Cancel</button>
-            </div>
-        </form>
     </div>
 </section>

@@ -1,6 +1,6 @@
 var edx = edx || {};
 
-(function(Backbone, _, $, gettext, ngettext, interpolate_text, NotificationModel, NotificationView) {
+(function(Backbone, _, $, gettext, ngettext, interpolate_text, CohortFormView, NotificationModel, NotificationView) {
     'use strict';
 
     edx.groups = edx.groups || {};
@@ -31,6 +31,12 @@ var edx = edx || {};
                 contentGroups: this.contentGroups,
                 advanced_settings_url: this.advanced_settings_url
             }));
+            this.cohortFormView = new CohortFormView({
+                model: this.model,
+                contentGroups: this.contentGroups
+            });
+            this.cohortFormView.render();
+            this.$('.tab-content-settings').append(this.cohortFormView.$el);
             return this;
         },
 
@@ -233,4 +239,5 @@ var edx = edx || {};
             }
         }
     });
-}).call(this, Backbone, _, $, gettext, ngettext, interpolate_text, NotificationModel, NotificationView);
+}).call(this, Backbone, _, $, gettext, ngettext, interpolate_text, edx.groups.CohortFormView,
+    NotificationModel, NotificationView);

@@ -1,0 +1,53 @@
+<div class="cohort-management-create">
+    <form action="" method="post" name="" id="cohort-management-create-form" class="cohort-management-create-form">
+
+        <h3 class="form-title"><%- gettext('Add a New Cohort Group') %></h3>
+
+        <div class="form-fields">
+            <div class="cohort-management-create-form-name field field-text">
+                <label for="cohort-create-name" class="label">
+                    <%- gettext('Cohort Name') %> *
+                    <span class="sr"><%- gettext('(Required Field)')%></span>
+                </label>
+                <input type="text" name="cohort-create-name" value="<%- cohort ? cohort.get('name') : '' %>" class="input cohort-create-name"
+                       id="cohort-create-name"
+                       placeholder="<%- gettext("Enter Your Cohort Group's Name") %>" required="required" />
+            </div>
+
+            <div class="cohort-management-details-assn-course field field-radio">
+                <label class="label">
+                    <%- gettext('Is this cohort group associated with course-based content groups?') %>
+                </label>
+                <label for="cohort-assn-course-no"><input type="radio" name="cohort-assn-course" value="no" /><%- gettext("No") %></label>
+                <div class="input-group has-other">
+                    <label for="cohort-assn-course-yes"><input type="radio" name="cohort-assn-course" value="yes" checked="checked" /><%- gettext("Yes") %></label>
+                    <div class="input-group-other is-visible">
+                        <label class="sr" for="cohort-group-assn"><%- gettext("Choose a content group to associate") %></label>
+                        <select name="cohort-group-assn" id="cohort-group-assn" class="input input-lg has-option-unavailable">
+                            <% for (var i=0; i < contentGroups.length; i++) { %>
+                                <% var contentGroup = contentGroups[i]; %>
+                                <option data-group-id="<%- contentGroup.get('id') %>"><%- contentGroup.get('name') %></option>
+                            <% } %>
+                            <option class="option-unavailable" selected="selected"><%- gettext("Some content group that's been deleted") %></option>
+                        </select>
+
+                        <div class="msg error inline">
+                            <p class="copy-error"><i class="icon icon-warning-sign"></i><%- gettext("The selected content group has been deleted, you may wish to reassign this cohort group.") %></p>
+                        </div>
+                        <div class="msg error inline">
+                            <p class="copy-error"><i class="icon icon-warning-sign"></i><%- gettext("You haven't configured any content groups yet. You need to create a content group before you can create assignments.") %><a href="#"><%- gettext("Create a content group") %></a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button class="form-submit button action-primary action-save">
+                <i class="icon icon-plus"></i>
+                <%- gettext('Save') %>
+            </button>
+            <a href="" class="form-cancel action-secondary action-cancel"><%- gettext('Cancel') %></a>
+        </div>
+    </form>
+</div>

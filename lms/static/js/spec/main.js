@@ -67,6 +67,7 @@
             'js/groups/models/content_group': 'js/groups/models/content_group',
             'js/groups/collections/cohort': 'js/groups/collections/cohort',
             'js/groups/views/cohort_editor': 'js/groups/views/cohort_editor',
+            'js/groups/views/cohort_form': 'js/groups/views/cohort_form',
             'js/groups/views/cohorts': 'js/groups/views/cohorts',
             'js/student_account/account': 'js/student_account/account',
             'js/student_account/views/FormView': 'js/student_account/views/FormView',
@@ -282,11 +283,18 @@
                 exports: 'edx.groups.CohortCollection',
                 deps: ['backbone', 'js/groups/models/cohort']
             },
-            'js/groups/views/cohort_editor': {
-                exports: 'edx.groups.CohortsEditor',
+            'js/groups/views/cohort_form': {
+                exports: 'edx.groups.CohortFormView',
                 deps: [
                     'backbone', 'jquery', 'underscore', 'js/views/notification', 'js/models/notification',
                     'string_utils'
+                ]
+            },
+            'js/groups/views/cohort_editor': {
+                exports: 'edx.groups.CohortEditorView',
+                deps: [
+                    'backbone', 'jquery', 'underscore', 'js/views/notification', 'js/models/notification',
+                    'string_utils', 'js/groups/views/cohort_form'
                 ]
             },
             'js/groups/views/cohorts': {
