@@ -53,16 +53,23 @@ class S3TarStore():
         Downloads a file matching `tarpath.basename()` item from `bucket`
         to `tarpath`. It then extracts the tar.gz file into `dirpath`.
         If no matching tar.gz file is found, it does nothing.
+
+        Note that any exceptions that occur while downloading or unpacking
+        will be logged, but not raised.
         """
         tarname = tarpath.basename()
         key = bucket.lookup(tarname)
         if key:
-            print "Downloading contents of {} from S3.".format(tarname)
-            key.get_contents_to_filename(tarpath)
+            try:
+                print "Downloading contents of {} from S3.".format(tarname)
+                key.get_contents_to_filename(tarpath)
 
-            with tarfile.open(tarpath, mode="r:gz") as tar:
-                print "Unpacking {} to {}".format(tarpath, dirpath)
-                tar.extractall(path=dirpath.parent)
+                with tarfile.open(tarpath, mode="r:gz") as tar:
+                    print "Unpacking {} to {}".format(tarpath, dirpath)
+                    tar.extractall(path=dirpath.parent)
+            except Exception as e:
+                print ("Ignored Exception:\n {}".format(e.message))
+                sys.stderr.write(e.message)
         else:
             print (
                 "Couldn't find anything matching {} in S3 bucket. "
@@ -75,18 +82,25 @@ class S3TarStore():
         Packs the contents for dirpath into a tar.gz file named
         `tarpath.basename()`. It then uploads the tar.gz file to `bucket`.
         If `dirpath` is not a directory, it does nothing.
+
+        Note that any exceptions that occur while compressing or uploading
+        will be logged, but not raised.
         """
         tarname = tarpath.basename()
 
         if dirpath.isdir():
-            with tarfile.open(tarpath, "w:gz") as tar:
-                print "Packing up {} to {}".format(dirpath, tarpath)
-                tar.add(dirpath, arcname=dirpath.basename())
+            try:
+                with tarfile.open(tarpath, "w:gz") as tar:
+                    print "Packing up {} to {}".format(dirpath, tarpath)
+                    tar.add(dirpath, arcname=dirpath.basename())
 
-            print "Uploading {} to S3 bucket.".format(tarname)
-            existing_key = bucket.lookup(tarname)
-            key = existing_key if existing_key else bucket.new_key(tarname)
-            key.set_contents_from_filename(tarpath)
+                print "Uploading {} to S3 bucket.".format(tarname)
+                existing_key = bucket.lookup(tarname)
+                key = existing_key if existing_key else bucket.new_key(tarname)
+                key.set_contents_from_filename(tarpath)
+            except Exception as e:
+                print ("Ignored Exception:\n {}".format(e.message))
+                sys.stderr.write(e.message)
         else:
             "Path {} isn't a directory. Doing Nothing.".format(dirname)
 
