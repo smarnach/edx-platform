@@ -2,9 +2,11 @@
 from path import path
 import unittest
 from tempfile import mkdtemp
-import ddt
 import itertools
 from shutil import rmtree
+
+import ddt
+from nose.plugins.attrib import attr
 
 from xmodule.assetstore import AssetMetadata
 from xmodule.modulestore.xml_importer import import_from_xml
@@ -43,6 +45,10 @@ ASSET_XSD_PATH = PLATFORM_ROOT / "common" / "lib" / "xmodule" / "xmodule" / "ass
 
 
 @ddt.ddt
+# Eventually, exclude this attribute from regular unittests while running *only* tests
+# with this attribute during regular performance tests.
+# @attr("perf_test")
+@unittest.skip
 class CrossStoreXMLRoundtrip(unittest.TestCase):
     """
     This class exists to time XML import and export between different modulestore
