@@ -724,6 +724,7 @@ class TestMidCourseReverifyView(ModuleStoreTestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
+
 @override_settings(MODULESTORE=MODULESTORE_CONFIG)
 class TestReverificationBanner(ModuleStoreTestCase):
     """ Tests for the midcourse reverification  failed toggle banner off """
