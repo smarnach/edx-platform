@@ -112,12 +112,6 @@
 
     google_analytics_file = microsite.get_template_path('google_analytics.html')
 
-    if settings.FEATURES['IS_EDX_DOMAIN'] and not is_microsite():
-        footer_file = microsite.get_template_path('footer-edx-new.html')
-
-    else:
-      footer_file = microsite.get_template_path('footer.html')
-
     style_overrides_file = microsite.get_value('css_overrides_file')
 %>
 
@@ -150,18 +144,25 @@
 
     <%include file="mathjax_accessible.html" />
 
-  % if not suppress_toplevel_navigation:
     <%include file="${header_file}" />
-  %endif
 
     <div class="content-wrapper" id="content">
       ${self.body()}
       <%block name="bodyextra"/>
     </div>
 
-  % if not suppress_toplevel_navigation:
-    <%include file="${footer_file}" />
-  % endif
+    % if settings.FEATURES['IS_EDX_DOMAIN'] and not is_microsite():
+      <%namespace name="footer_namespace" file="${microsite.get_template_path('footer-edx-new.html')}"/>
+    % else:
+      <%namespace name="footer_namespace" file="${microsite.get_template_path('footer.html')}"/>
+    % endif
+
+    <%block name="footer">
+      ## Explicitly state the inheritance structure that child templates should
+      ## follow. This allows child templates to interact with the "footer" block
+      ## defined in the footer template.
+      ${footer_namespace.footer()}
+    </%block>
 
   </div>
 
