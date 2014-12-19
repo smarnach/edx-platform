@@ -1,4 +1,21 @@
 #!/usr/bin/env python
+"""
+This script is intended to be used to store the ~/.pip-accel and
+~/.pip/download-cache directories in S3. The primary use case, as
+of writing this, is to help speed up Jenkins build times for
+edx-platform tests.
+
+Before running pip-accel install (or pip install) on a Jenkins worker,
+these directories will be download from S3.
+
+Usage:
+    `python scripts/pip-cache-store.py download`
+
+This script will also be used to automatically update these directories.
+
+Usage:
+    `python scripts/pip-cache-store.py upload`
+"""
 from boto.s3.connection import S3Connection
 from boto.exception import S3ResponseError
 import os
@@ -16,7 +33,7 @@ class S3TarStore():
         """
         Returns bucket matching name. If there exists no such bucket
         or there is a permissions error, then `None` is returned.
-        Any other exceptions, uncluding connection errors will be
+        Any other exceptions, including connection errors, will be
         raised to be handled elsewhere.
         """
         try:
@@ -25,7 +42,7 @@ class S3TarStore():
             return bucket
         except S3ResponseError:
             print ( 
-                "Please check that the bucket {} exist and that you have "
+                "Please check that the bucket {} exists and that you have "
                 "the proper credentials to access it.".format(bucket_name)
             )
             return None
@@ -76,7 +93,7 @@ class S3TarStore():
 
 class PipCacheStore(S3TarStore):
     """
-    Fucntionality for using s3 to cache edx-platform python dependencies for
+    Functionality for using S3 to cache edx-platform python dependencies for
     jenkins workers.
 
     Optional environment variables:
