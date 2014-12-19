@@ -8,14 +8,14 @@ var edx = edx || {};
     edx.groups.CohortEditorView = Backbone.View.extend({
         events : {
             'click .wrapper-tabs .tab': 'selectTab',
-            'click .cohort-management-details-form .action-save': 'saveSettings',
-            'click .cohort-management-details-form .action-cancel': 'cancelSettings',
+            'click .tab-content-settings .action-save': 'saveSettings',
             'submit .cohort-management-group-add-form': 'addStudents'
         },
 
         initialize: function(options) {
             this.template = _.template($('#cohort-editor-tpl').text());
             this.cohorts = options.cohorts;
+            this.cohortUserPartitionId = options.cohortUserPartitionId;
             this.contentGroups = options.contentGroups;
             this.advanced_settings_url = options.advanced_settings_url;
         },
@@ -28,11 +28,13 @@ var edx = edx || {};
         render: function() {
             this.$el.html(this.template({
                 cohort: this.model,
+                cohortUserPartitionId: this.cohortUserPartitionId,
                 contentGroups: this.contentGroups,
                 advanced_settings_url: this.advanced_settings_url
             }));
             this.cohortFormView = new CohortFormView({
                 model: this.model,
+                cohortUserPartitionId: this.cohortUserPartitionId,
                 contentGroups: this.contentGroups
             });
             this.cohortFormView.render();
@@ -52,12 +54,10 @@ var edx = edx || {};
 
         saveSettings: function(event) {
             event.preventDefault();
-            window.alert('Save not yet implemented!');
-        },
-
-        cancelSettings: function(event) {
-            event.preventDefault();
-            window.alert('Cancel not yet implemented!');
+            this.cohortFormView.saveForm(function(options) {
+                // TODO: implement notifications!
+                window.alert('Notification: ' + options);
+            });
         },
 
         setCohort: function(cohort) {

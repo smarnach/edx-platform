@@ -276,6 +276,7 @@
                 var cohortsView = new edx.groups.CohortsView({
                     el: cohortManagementElement,
                     model: cohorts,
+                    cohortUserPartitionId: ${cohorted_user_partition.id if cohorted_user_partition else 'null'},
                     contentGroups: contentGroups,
                     advanced_settings_url: cohortManagementElement.data('advanced-settings-url'),
                     upload_cohorts_csv_url: cohortManagementElement.data('upload_cohorts_csv_url')

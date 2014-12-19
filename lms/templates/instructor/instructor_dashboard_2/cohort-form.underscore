@@ -1,7 +1,8 @@
 <div class="cohort-management-create">
     <form action="" method="post" name="" id="cohort-management-create-form" class="cohort-management-create-form">
-
-        <h3 class="form-title"><%- gettext('Add a New Cohort Group') %></h3>
+        <% if (!cohort.id) { %>
+            <h3 class="form-title"><%- gettext('Add a New Cohort Group') %></h3>
+        <% } %>
 
         <div class="form-fields">
             <div class="cohort-management-create-form-name field field-text">
@@ -14,32 +15,54 @@
                        placeholder="<%- gettext("Enter Your Cohort Group's Name") %>" required="required" />
             </div>
 
-            <div class="cohort-management-details-assn-course field field-radio">
-                <label class="label">
-                    <%- gettext('Is this cohort group associated with course-based content groups?') %>
-                </label>
-                <label for="cohort-assn-course-no"><input type="radio" name="cohort-assn-course" value="no" /><%- gettext("No") %></label>
-                <div class="input-group has-other">
-                    <label for="cohort-assn-course-yes"><input type="radio" name="cohort-assn-course" value="yes" checked="checked" /><%- gettext("Yes") %></label>
-                    <div class="input-group-other is-visible">
-                        <label class="sr" for="cohort-group-assn"><%- gettext("Choose a content group to associate") %></label>
-                        <select name="cohort-group-assn" id="cohort-group-assn" class="input input-lg has-option-unavailable">
-                            <% for (var i=0; i < contentGroups.length; i++) { %>
-                                <% var contentGroup = contentGroups[i]; %>
-                                <option data-group-id="<%- contentGroup.get('id') %>"><%- contentGroup.get('name') %></option>
-                            <% } %>
-                            <option class="option-unavailable" selected="selected"><%- gettext("Some content group that's been deleted") %></option>
-                        </select>
+            <% if (contentGroups.length > 0) { %>
+                <%
+                var foundSelected = false;
+                var cohortGroupId = cohort.get('group_id');
+                %>
 
-                        <div class="msg error inline">
-                            <p class="copy-error"><i class="icon icon-warning-sign"></i><%- gettext("The selected content group has been deleted, you may wish to reassign this cohort group.") %></p>
-                        </div>
-                        <div class="msg error inline">
-                            <p class="copy-error"><i class="icon icon-warning-sign"></i><%- gettext("You haven't configured any content groups yet. You need to create a content group before you can create assignments.") %><a href="#"><%- gettext("Create a content group") %></a></p>
+                <div class="cohort-management-details-assn-course field field-radio">
+                    <label class="label">
+                        <%- gettext('Is this cohort group associated with course-based content groups?') %>
+                    </label>
+                    <label for="cohort-assn-course-no"><input type="radio" class="radio-no" name="cohort-assn-course" value="no"  <%- !cohortGroupId ? 'checked="checked"' : '' %>/><%- gettext("No") %></label>
+                    <div class="input-group has-other">
+                        <label for="cohort-assn-course-yes"><input type="radio" class="radio-yes" name="cohort-assn-course" value="yes" <%- cohortGroupId ? 'checked="checked"' : '' %> /><%- gettext("Yes") %></label>
+                        <div class="input-group-other is-visible">
+                            <label class="sr" for="cohort-group-assn"><%- gettext("Choose a content group to associate") %></label>
+                            <select name="cohort-group-assn" id="cohort-group-assn" class="input input-lg has-option-unavailable input-cohort-group-association <%- !cohortGroupId ? 'is-disabled' : '' %>">
+                                <% if (!cohortGroupId) { %>
+                                    <option><%- gettext("Choose a content group to associate") %></option>
+                                <% } %>
+
+                                <%
+                                for (var i=0; i < contentGroups.length; i++) {
+                                    var contentGroup = contentGroups[i];
+                                    var contentGroupId = contentGroup.get('id');
+                                    var isSelected = contentGroupId == cohortGroupId;
+                                    if (isSelected) {
+                                        foundSelected = true;
+                                    }
+                                %>
+                                    <option value="<%- contentGroupId %>" <%- isSelected ? 'selected="selected"' : '' %>><%- contentGroup.get('name') %></option>
+                                <%
+                                }
+                                %>
+
+                                <% if (cohortGroupId && !foundSelected) { %>
+                                    <option value="<%- contentGroupId %>" class="option-unavailable" selected="selected"><%- gettext("Some content group that's been deleted") %></option>
+                                <% } %>
+                            </select>
+
+                            <% if (cohortGroupId && !foundSelected) { %>
+                                <div class="msg error inline">
+                                    <p class="copy-error"><i class="icon icon-warning-sign"></i><%- gettext("The selected content group has been deleted, you may wish to reassign this cohort group.") %></p>
+                                </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
-            </div>
+            <% } %>
         </div>
 
         <div class="form-actions">
@@ -47,7 +70,9 @@
                 <i class="icon icon-plus"></i>
                 <%- gettext('Save') %>
             </button>
-            <a href="" class="form-cancel action-secondary action-cancel"><%- gettext('Cancel') %></a>
+            <% if (!cohort.id) { %>
+                <a href="" class="form-cancel action-secondary action-cancel"><%- gettext('Cancel') %></a>
+            <% } %>
         </div>
     </form>
 </div>

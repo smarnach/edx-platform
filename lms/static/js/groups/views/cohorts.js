@@ -1,6 +1,6 @@
 var edx = edx || {};
 
-(function($, _, Backbone, gettext, interpolate_text, CohortEditorView, CohortFormView,
+(function($, _, Backbone, gettext, interpolate_text, CohortModel, CohortEditorView, CohortFormView,
           NotificationModel, NotificationView, FileUploaderView) {
     'use strict';
 
@@ -13,8 +13,8 @@ var edx = edx || {};
         events : {
             'change .cohort-select': 'onCohortSelected',
             'click .action-create': 'showAddCohortForm',
-            'click .action-cancel': 'cancelAddCohortForm',
-            'click .action-save': 'saveAddCohortForm',
+            'click .cohort-management-add-modal .action-save': 'saveAddCohortForm',
+            'click .cohort-management-add-modal .action-cancel': 'cancelAddCohortForm',
             'click .link-cross-reference': 'showSection',
             'click .toggle-cohort-management-secondary': 'showCsvUpload'
         },
@@ -26,6 +26,7 @@ var edx = edx || {};
             this.selectorTemplate = _.template($('#cohort-selector-tpl').text());
             this.advanced_settings_url = options.advanced_settings_url;
             this.upload_cohorts_csv_url = options.upload_cohorts_csv_url;
+            this.cohortUserPartitionId = options.cohortUserPartitionId;
             this.contentGroups = options.contentGroups;
             model.on('sync', this.onSync, this);
 
@@ -99,6 +100,7 @@ var edx = edx || {};
                     el: this.$('.cohort-management-group'),
                     model: cohort,
                     cohorts: this.model,
+                    cohortUserPartitionId: this.cohortUserPartitionId,
                     contentGroups: this.contentGroups,
                     advanced_settings_url: this.advanced_settings_url
                 });
@@ -126,13 +128,18 @@ var edx = edx || {};
         },
 
         showAddCohortForm: function(event) {
+            var newCohort;
             event.preventDefault();
             this.removeNotification();
+            newCohort = new CohortModel();
+            newCohort.url = this.model.url;
             this.cohortFormView = new CohortFormView({
+                model: newCohort,
+                cohortUserPartitionId: this.cohortUserPartitionId,
                 contentGroups: this.contentGroups
             });
             this.cohortFormView.render();
-            this.cohortFormView.$el.insertAfter(this.$('.cohort-management-nav'));
+            this.$('.cohort-management-add-modal').append(this.cohortFormView.$el);
             this.setCohortEditorVisibility(false);
         },
 
@@ -155,42 +162,33 @@ var edx = edx || {};
         },
 
         saveAddCohortForm: function(event) {
-            event.preventDefault();
             var self = this,
                 showAddError,
-                cohortName = this.$('.cohort-create-name').val().trim();
+                newCohort = this.cohortFormView.model;
             showAddError = function(message) {
                 self.showNotification(
                     {type: 'error', title: message},
                     self.$('.cohort-management-create-form-name label')
                 );
             };
+            event.preventDefault();
             this.removeNotification();
-            if (cohortName.length > 0) {
-                $.post(
-                        this.model.url + '/add',
-                    {name: cohortName}
-                ).done(function(result) {
-                        if (result.success) {
-                            self.lastSelectedCohortId = result.cohort.id;
-                            self.model.fetch().done(function() {
-                                self.showNotification({
-                                    type: 'confirmation',
-                                    title: interpolate_text(
-                                        gettext('The {cohortGroupName} cohort group has been created. You can manually add students to this group below.'),
-                                        {cohortGroupName: cohortName}
-                                    )
-                                });
-                            });
-                        } else {
-                            showAddError(result.msg);
-                        }
-                    }).fail(function() {
-                        showAddError(gettext("We've encountered an error. Please refresh your browser and then try again."));
+            this.cohortFormView.saveForm()
+                .done(function() {
+                    self.lastSelectedCohortId = newCohort.id;
+                    self.model.fetch().done(function() {
+                        self.showNotification({
+                            type: 'confirmation',
+                            title: interpolate_text(
+                                gettext('The {cohortGroupName} cohort group has been created. You can manually add students to this group below.'),
+                                {cohortGroupName: newCohort.get('name')}
+                            )
+                        });
                     });
-            } else {
-                showAddError(gettext('Please enter a name for your new cohort group.'));
-            }
+                })
+                .fail(function(errorMessage) {
+                    showAddError(errorMessage);
+                });
         },
 
         cancelAddCohortForm: function(event) {
@@ -238,5 +236,5 @@ var edx = edx || {};
             return ".instructor-nav .nav-item a[data-section='" + section + "']";
         }
     });
-}).call(this, $, _, Backbone, gettext, interpolate_text, edx.groups.CohortEditorView, edx.groups.CohortFormView,
-    NotificationModel, NotificationView, FileUploaderView);
+}).call(this, $, _, Backbone, gettext, interpolate_text, edx.groups.CohortModel, edx.groups.CohortEditorView,
+    edx.groups.CohortFormView, NotificationModel, NotificationView, FileUploaderView);
